@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#000000">
 <title>GameDoko</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Black+Ops+One&family=Cinzel:wght@700;900&family=Lilita+One&family=Roboto:wght@900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f4f6fb;--card:#ffffff;--text:#121826;--muted:#667085;--line:#e4e7ee;--blue:#1d4ed8;--blue2:#2563eb;--gold:#f59e0b;--ok:#16a34a;--bad:#dc2626;--warn:#d97706}
 [data-theme="dark"]{--bg:#0d1117;--card:#161b24;--text:#eef1f6;--muted:#98a2b3;--line:#262d3a}
@@ -22,13 +25,12 @@ input{font:inherit}
 #splash p{margin:0;opacity:.85}
 @keyframes wave{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
 
-/* Login & name screens */
+/* Login */
 .screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;background:linear-gradient(160deg,#1e3a8a,#2563eb);color:#fff;z-index:90;text-align:center}
 .screen .sticker{font-size:80px}
 .screen h2{margin:8px 0 6px;font-size:30px}
 .screen p{margin:0 0 26px;opacity:.9}
 .whitebtn{background:#fff;color:#111;border-radius:14px;padding:14px 22px;font-weight:700;font-size:16px;display:flex;align-items:center;gap:10px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
-.screen input{width:100%;max-width:340px;padding:14px;border-radius:12px;border:0;font-size:16px;margin-bottom:14px;text-align:center}
 
 /* Top bar */
 #topbar{position:fixed;top:0;left:0;right:0;height:58px;background:#000;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:50;padding-top:env(safe-area-inset-top)}
@@ -61,14 +63,18 @@ input{font:inherit}
 .hello p{margin:4px 0 0;opacity:.9}
 .hello .big{position:absolute;right:12px;top:6px;font-size:58px;opacity:.9}
 .games{display:grid;gap:10px}
-.game{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;color:var(--text);text-align:left;width:100%}
-.game .ic{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0}
-.game b{display:block;font-size:17px}
-.game small{color:var(--muted)}
-.game .go{margin-left:auto;color:var(--muted);font-size:20px}
-.steps{display:grid;gap:8px;margin:0;padding:0;list-style:none}
-.steps li{display:flex;gap:10px;align-items:flex-start;font-size:14px}
-.steps li i{font-style:normal;background:var(--blue2);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px}
+.game{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:16px;padding:0;color:#fff;text-align:left;width:100%;overflow:hidden;min-height:84px;position:relative}
+.game .em{font-size:44px;padding:0 6px 0 16px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
+.game .go{margin-left:auto;margin-right:16px;font-size:26px;opacity:.9}
+.game small{display:block;opacity:.85;font-size:12px;margin-top:2px;font-family:system-ui,sans-serif;letter-spacing:0}
+.banner{border-radius:18px;padding:20px 16px;margin-bottom:6px;color:#fff;display:flex;align-items:center;gap:14px;min-height:96px}
+.banner .em{font-size:52px}
+.wm{display:block;line-height:1.05}
+.wm-ff{font-family:'Bangers',cursive;font-size:30px;letter-spacing:2px;color:#ffb300;text-shadow:2px 2px 0 #b71c1c,0 0 12px rgba(255,120,0,.6);font-style:italic}
+.wm-pubg{font-family:'Black Ops One',cursive;font-size:27px;letter-spacing:1px;color:#f4c430;text-shadow:2px 2px 0 #3b3a1e}
+.wm-ml{font-family:'Cinzel',serif;font-weight:900;font-size:25px;letter-spacing:1px;color:#ffe08a;text-shadow:0 2px 0 #1e3a8a,0 0 10px rgba(80,140,255,.8)}
+.wm-coc{font-family:'Lilita One',cursive;font-size:30px;letter-spacing:1px;color:#ffd23f;-webkit-text-stroke:1.5px #5a2d0c;text-shadow:0 3px 0 #5a2d0c}
+.wm-yt{font-family:'Roboto',sans-serif;font-weight:900;font-size:26px;letter-spacing:-1px;color:#fff}
 
 /* Packages */
 .sect{font-weight:800;margin:14px 2px 8px;color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.8px}
@@ -135,17 +141,9 @@ label{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
 <div id="loginScreen" class="screen hidden">
   <div class="sticker">🙏</div>
   <h2>Namaste! Welcome to GameDoko</h2>
-  <p>Game top-up, sasto ra bharosa ko sath</p>
-  <button class="whitebtn" id="googleBtn"><span style="font-size:20px">G</span> Google se Login karo</button>
+  <p>Fast and trusted game top-up</p>
+  <button class="whitebtn" id="googleBtn"><span style="font-size:20px">G</span> Continue with Google</button>
   <div id="loginErr" style="margin-top:14px;color:#fecaca;font-size:14px"></div>
-</div>
-
-<div id="nameScreen" class="screen hidden">
-  <div class="sticker">😊</div>
-  <h2>Aapka naam kya hai?</h2>
-  <p>Ye naam app me dikhega</p>
-  <input id="nameInput" maxlength="30" placeholder="Apna naam likho">
-  <button class="whitebtn" id="nameSave">Aage badho →</button>
 </div>
 
 <div id="main" class="hidden">
@@ -172,13 +170,13 @@ label{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
 <div id="modalHost"></div>
 
 <script>
-/* Agar main app code na chale (jaise file seedha phone se khola), to splash par atke nahi */
+/* If the main app code does not run (e.g. file opened directly), do not stay stuck on splash */
 setTimeout(function(){
   if(window.__gd_ready) return;
   var sp=document.getElementById('splash'); if(sp) sp.remove();
   var ls=document.getElementById('loginScreen'); ls.classList.remove('hidden');
   var b=document.getElementById('googleBtn'); if(b) b.style.display='none';
-  document.getElementById('loginErr').innerHTML='Ye file seedha kholne se nahi chalti.<br>Pehle app ko Netlify par daalo aur uske link se kholo.';
+  document.getElementById('loginErr').innerHTML='This file does not work when opened directly.<br>Please open the app from its Netlify link.';
 },4000);
 </script>
 <script type="module">
@@ -187,7 +185,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, addDoc, updateDoc, collection, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* ============ CONFIG (yahan badalna ho to badlo) ============ */
+/* ============ CONFIG ============ */
 const firebaseConfig = {
   apiKey: "AIzaSyBkQhQKr4z6t4f1nUfHB1UA9rNzopwZjFE",
   authDomain: "topup-center-577dc.firebaseapp.com",
@@ -198,38 +196,38 @@ const firebaseConfig = {
 };
 const CLOUD_NAME = "ft1osnio";
 const UPLOAD_PRESET = "topup_upload";
-const ADMIN_EMAIL = "nepalihoniyrr0@gmail.com";   // sirf ye Google account admin panel dekh sakta hai
+const ADMIN_EMAIL = "nepalihoniyrr0@gmail.com";   // only this Google account sees the Admin panel
 const SUPPORT_EMAIL = "nepalihoniyrr0@gmail.com";
 const PAY_NAME = "Muna Rimal";
 const PAY_NUMBER = "9806013655";
 const QR_IMAGE = "qr.jpg";
-const MARKUP = 25;   // har rate me +25 Rs
-/* ============================================================ */
+const MARKUP = 25;   // +25 Rs on every rate
+/* ================================== */
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* ---------- Games & rates (original rate; +MARKUP khud judta hai) ---------- */
+/* ---------- Games & rates (base rate; +MARKUP is added automatically) ---------- */
 const GAMES = [
-  { id:"ff", name:"Free Fire", icon:"🔥", color:"#fde68a", idLabel:"Free Fire UID", cats:[
+  { id:"ff", name:"FREE FIRE", wm:"wm-ff", bg:"linear-gradient(135deg,#1a1a1a,#7a1f00 60%,#ff7a00)", icon:"🔥", idLabel:"Free Fire UID", cats:[
     { name:"Diamonds", items:[["115 💎",99,"💎"],["240 💎",199,"💎"],["355 💎",299,"💎"],["480 💎",399,"💎"],["850 💎",699,"💎"],["2530 💎",1999,"💎"],["5060 💎",3999,"💎"]] },
     { name:"Passes", items:[["Weekly Pass",199,"📅"],["Monthly Pass",999,"🎫"]] }
   ]},
-  { id:"pubg", name:"PUBG Mobile", icon:"🎯", color:"#bbf7d0", idLabel:"PUBG Character ID", cats:[
+  { id:"pubg", name:"PUBG MOBILE", wm:"wm-pubg", bg:"linear-gradient(135deg,#1c1f14,#3b4a1e 60%,#6b7d2a)", icon:"🪖", idLabel:"PUBG Character ID", cats:[
     { name:"UC Packs", items:[["60 UC",180,"💵"],["325 UC",750,"💵"],["660 UC",1500,"💵"],["1800 UC",3700,"💵"],["3850 UC",7400,"💵"],["8100 UC",14700,"💵"],["16200 UC",29000,"💵"]] },
     { name:"Monthly Pass", items:[["Prime",170,"🎫"],["Prime Plus",1600,"🎟️"]] }
   ]},
-  { id:"ml", name:"Mobile Legends", icon:"⚔️", color:"#bfdbfe", idLabel:"User ID (Zone ID)", cats:[
+  { id:"ml", name:"Mobile Legends", wm:"wm-ml", bg:"linear-gradient(135deg,#0b1b4d,#1e3a8a 60%,#3b82f6)", icon:"⚔️", idLabel:"User ID (Zone ID)", cats:[
     { name:"Diamonds", items:[["50 + 5 💎",150,"💎"],["100 + 10 💎",290,"💎"],["150 + 15 💎",570,"💎"],["312 + 31 💎",850,"💎"],["500 + 65 💎",1440,"💎"],["1000 + 130 💎",2850,"💎"]] },
     { name:"Pass", items:[["Weekly Pass",250,"🎫"]] }
   ]},
-  { id:"coc", name:"Clash of Clans", icon:"🏰", color:"#fecaca", idLabel:"Player Tag (#...)", cats:[
+  { id:"coc", name:"Clash of Clans", wm:"wm-coc", bg:"linear-gradient(135deg,#7a3b0a,#c2561a 60%,#f59e0b)", icon:"🏰", idLabel:"Player Tag (#...)", cats:[
     { name:"Game Pass", items:[["Gold Pass [$0.99 - $1.29]",199,"🎫"],["Gold Pass [$4 - $5]",750,"🎫"],["Mini Event Pass",225,"🧧"],["Event Pass",600,"🧧"]] },
     { name:"Cosmetics", items:[["Hero Skin [$4.49]",750,"🤴"],["Sceneries [$3.19]",520,"🌄"],["Limited Sceneries [$4.49]",750,"🌄"]] },
     { name:"Gem Packs", items:[["500 Gems [$2.29]",370,"🔰"],["2500 Gems [$8.99]",1500,"🔰"],["6500 Gems [$21.99]",3650,"🔰"],["14000 Gems [$43.99]",7250,"🔰"]] }
   ]},
-  { id:"yt", name:"YouTube Premium", icon:"▶️", color:"#fecdd3", idLabel:"Gmail (jis par Premium chahiye)", cats:[
+  { id:"yt", name:"YouTube Premium", wm:"wm-yt", bg:"linear-gradient(135deg,#7f1d1d,#dc2626 70%,#ef4444)", icon:"▶️", idLabel:"Gmail (for Premium)", cats:[
     { name:"Plans", items:[["1 Month [Family Join]",159,"📺"],["12 Months [Individual Plan]",4499,"📺"]] }
   ]}
 ];
@@ -252,7 +250,7 @@ try{ setTheme(localStorage.getItem("gd_theme") || "light") }catch(e){}
 /* ---------- Toast / Modal ---------- */
 let toastTimer;
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("show"),4500); }
-function modal(emoji,title,text,btnText="Theek hai",onClose){
+function modal(emoji,title,text,btnText="OK",onClose){
   $("#modalHost").innerHTML = `<div class="modal-bg"><div class="modal"><div class="em">${emoji}</div><h3>${esc(title)}</h3><p class="muted">${esc(text)}</p><button class="btn" id="mOk">${esc(btnText)}</button></div></div>`;
   $("#mOk").onclick = () => { $("#modalHost").innerHTML=""; onClose && onClose(); };
 }
@@ -261,43 +259,36 @@ function modal(emoji,title,text,btnText="Theek hai",onClose){
 const splashStart = Date.now();
 function hideSplash(){
   const wait = Math.max(0, 2200 - (Date.now() - splashStart));
-  setTimeout(()=>{ const s=$("#splash"); s.style.opacity=0; setTimeout(()=>s.remove(),500); }, wait);
+  setTimeout(()=>{ const s=$("#splash"); if(!s) return; s.style.opacity=0; setTimeout(()=>s.remove(),500); }, wait);
 }
 
 /* ---------- Auth ---------- */
 $("#googleBtn").onclick = async () => {
   $("#loginErr").textContent = "";
   try { await signInWithPopup(auth, new GoogleAuthProvider()); }
-  catch(e){ $("#loginErr").textContent = "Login nahi hua: " + (e.code || e.message); }
+  catch(e){ $("#loginErr").textContent = "Login failed: " + (e.code || e.message); }
 };
 
 onAuthStateChanged(auth, async user => {
   if (!user) {
     me = null; profile = null;
     if (unsubOrders) unsubOrders(); if (unsubAdmin) unsubAdmin();
-    $("#main").classList.add("hidden"); $("#nameScreen").classList.add("hidden");
+    $("#main").classList.add("hidden");
     $("#loginScreen").classList.remove("hidden"); hideSplash(); return;
   }
   me = user;
+  const fallbackName = (user.displayName || (user.email||"User").split("@")[0]).trim();
+  profile = { name: fallbackName, email: user.email, photo: user.photoURL || "" };
   try {
-    const snap = await getDoc(doc(db,"users",user.uid));
-    profile = snap.exists() ? snap.data() : null;
-  } catch(e){ profile = null; }
+    const ref = doc(db,"users",user.uid);
+    const snap = await getDoc(ref);
+    if (snap.exists() && snap.data().name) profile = snap.data();
+    else await setDoc(ref, { ...profile, createdAt: serverTimestamp() }, { merge:true });
+  } catch(e){ console.warn(e); }
   $("#loginScreen").classList.add("hidden");
-  if (!profile || !profile.name) {
-    $("#nameInput").value = user.displayName || "";
-    $("#nameScreen").classList.remove("hidden");
-  } else { enterApp(); }
+  enterApp();
   hideSplash();
 });
-
-$("#nameSave").onclick = async () => {
-  const name = $("#nameInput").value.trim();
-  if (name.length < 2) { $("#nameInput").style.outline="3px solid #fca5a5"; return; }
-  profile = { name, email: me.email, photo: me.photoURL || "", createdAt: serverTimestamp() };
-  try { await setDoc(doc(db,"users",me.uid), profile, { merge:true }); } catch(e){ toast("Naam save nahi hua, dobara try karo"); return; }
-  $("#nameScreen").classList.add("hidden"); enterApp();
-};
 
 function enterApp(){
   $("#main").classList.remove("hidden");
@@ -320,8 +311,8 @@ function watchOrders(){
       snap.docChanges().forEach(ch => {
         if (ch.type === "modified") {
           const o = ch.doc.data();
-          if (o.status === "approved") toast("✅ Aapka payment success ho gaya, top-up ho gaya. Please phir visit karna 🙏");
-          if (o.status === "rejected") toast("❌ Payment check nahi hua. Notification me dekho ya support se baat karo.");
+          if (o.status === "approved") toast("✅ Your payment is successful and your top-up is done. Please visit again 🙏");
+          if (o.status === "rejected") toast("❌ We could not verify your payment. Check notifications or contact support.");
         }
       });
     }
@@ -366,10 +357,8 @@ $("#btnProfile").onclick = () => {
       <div><b style="font-size:18px">${esc(profile.name)}</b><div class="muted" style="word-break:break-all">${esc(me.email)}</div></div>
     </div>
     <div class="sum" style="margin-top:12px"><span class="muted">Total orders</span><b>${myOrders.length}</b></div>
-    <div class="sum"><span class="muted">Successful</span><b>${myOrders.filter(o=>o.status==="approved").length}</b></div>
-    <button class="btn alt" id="editName">✏️ Naam badlo</button>`;
+    <div class="sum"><span class="muted">Successful</span><b>${myOrders.filter(o=>o.status==="approved").length}</b></div>`;
   s.classList.remove("hidden");
-  $("#editName").onclick = () => { s.classList.add("hidden"); $("#nameInput").value = profile.name; $("#nameScreen").classList.remove("hidden"); };
 };
 
 /* ---------- Render ---------- */
@@ -384,27 +373,28 @@ function render(){
   if (p === "settings") return renderSettings();
   if (p === "admin") return renderAdmin();
 }
-function greetWord(){ const h=new Date().getHours(); return h<12?"Suprabhat":h<17?"Namaskar":"Shubha sandhya"; }
 
 function renderHome(){
+  const first = (profile.name || "").split(" ")[0];
   app$.innerHTML = `
     <div class="hello"><div class="big">🙏</div>
-      <h2>Namaskar 🙏</h2>
-      <p>${esc(profile.name)}, kya top-up karna hai aaj?</p>
+      <h2>Namaste 🙏</h2>
+      <p>${esc(first)}, what would you like to top up today?</p>
     </div>
     <div class="sect">Games</div>
     <div class="games">
-      ${GAMES.map(g=>`<button class="game" data-g="${g.id}">
-        <div class="ic" style="background:${g.color}">${g.icon}</div>
-        <div><b>${esc(g.name)}</b><small>Top-up karne ke liye dabao</small></div><span class="go">›</span></button>`).join("")}
+      ${GAMES.map(g=>`<button class="game" data-g="${g.id}" style="background:${g.bg}">
+        <span class="em">${g.icon}</span>
+        <span><span class="wm ${g.wm}">${esc(g.name)}</span><small>Tap to top up</small></span>
+        <span class="go">›</span></button>`).join("")}
     </div>
-    <div class="sect">Kaise kaam karta hai</div>
-    <div class="card"><ul class="steps">
-      <li><i>1</i><span>Game aur package chuno</span></li>
-      <li><i>2</i><span>Apna ID 2 baar daalo</span></li>
-      <li><i>3</i><span>eSewa QR se payment karo aur screenshot daalo</span></li>
-      <li><i>4</i><span>Hum check karke top-up kar denge. Status 🔔 me dikhega</span></li>
-    </ul></div>
+    <div class="sect">How it works</div>
+    <div class="card muted" style="line-height:1.7">
+      1. Choose a game and a package<br>
+      2. Enter your ID twice<br>
+      3. Pay with eSewa QR and upload the screenshot<br>
+      4. We verify and top up. Track the status in 🔔
+    </div>
     <div class="foot">Made by Krish Rimal</div>`;
   app$.querySelectorAll(".game").forEach(b => b.onclick = () => go("game",{game:b.dataset.g}));
 }
@@ -412,7 +402,8 @@ function renderHome(){
 function renderGame(){
   const g = GAMES.find(x=>x.id===current.game);
   app$.innerHTML = `
-    <div class="page-title"><button class="back" id="bk">←</button>${g.icon} ${esc(g.name)}</div>
+    <div class="page-title"><button class="back" id="bk">←</button>Select package</div>
+    <div class="banner" style="background:${g.bg}"><span class="em">${g.icon}</span><span class="wm ${g.wm}" style="font-size:34px">${esc(g.name)}</span></div>
     ${g.cats.map((c,ci)=>`<div class="sect">${esc(c.name)}</div>${c.items.map((it,ii)=>`
       <button class="pkg" data-c="${ci}" data-i="${ii}">
         <div class="l"><div class="em">${it[2]}</div><b>${esc(it[0])}</b></div>
@@ -429,7 +420,7 @@ function renderOrder(){
   shotFile = null;
   const g = GAMES.find(x=>x.id===current.game), it = current.item;
   app$.innerHTML = `
-    <div class="page-title"><button class="back" id="bk">←</button>Order confirm karo</div>
+    <div class="page-title"><button class="back" id="bk">←</button>Confirm your order</div>
     <div class="card">
       <div class="sum"><span class="muted">Game</span><b>${esc(g.name)}</b></div>
       <div class="sum"><span class="muted">Package</span><b>${esc(it.name)}</b></div>
@@ -437,27 +428,27 @@ function renderOrder(){
     </div>
     <div class="card">
       <label style="margin-top:0">${esc(g.idLabel)}</label>
-      <input class="inp" id="gid" autocomplete="off" placeholder="${esc(g.idLabel)} likho">
-      <label>${esc(g.idLabel)} dobara likho (confirm)</label>
-      <input class="inp" id="gid2" autocomplete="off" placeholder="Dobara wahi likho">
+      <input class="inp" id="gid" autocomplete="off" placeholder="Enter ${esc(g.idLabel)}">
+      <label>Confirm ${esc(g.idLabel)}</label>
+      <input class="inp" id="gid2" autocomplete="off" placeholder="Enter it again">
     </div>
     <div class="card qrbox">
-      <b>💳 Payment karo (eSewa)</b>
+      <b>💳 Pay with eSewa</b>
       <div class="amt">${rs(it.price)}</div>
-      <img src="${QR_IMAGE}" alt="eSewa QR" onerror="this.outerHTML='<p class=muted>QR image nahi mili (qr.jpg upload karo)</p>'">
+      <img src="${QR_IMAGE}" alt="eSewa QR" onerror="this.outerHTML='<p class=muted>QR image not found (upload qr.jpg)</p>'">
       <div style="margin-top:8px"><b>${esc(PAY_NAME)}</b><div class="muted">eSewa: ${PAY_NUMBER}</div></div>
-      <button class="copy" id="cp">📋 Number copy karo</button>
-      <p class="muted" style="margin-bottom:0">Itna hi amount bhejo, phir niche screenshot daalo.</p>
+      <button class="copy" id="cp">📋 Copy number</button>
+      <p class="muted" style="margin-bottom:0">Send exactly this amount, then upload the screenshot below.</p>
     </div>
     <div class="card">
-      <b>📸 Payment ka screenshot</b>
+      <b>📸 Payment screenshot</b>
       <input type="file" accept="image/*" id="shot" class="inp" style="margin-top:8px">
       <img id="prev" class="shot hidden">
     </div>
     <div class="err" id="err"></div>
-    <button class="btn" id="save">💾 Save / Order bhejo</button>`;
+    <button class="btn" id="save">💾 Save and place order</button>`;
   $("#bk").onclick = () => go("game",{game:g.id});
-  $("#cp").onclick = async () => { try{ await navigator.clipboard.writeText(PAY_NUMBER); toast("Number copy ho gaya"); }catch(e){ toast("Number: "+PAY_NUMBER); } };
+  $("#cp").onclick = async () => { try{ await navigator.clipboard.writeText(PAY_NUMBER); toast("Number copied"); }catch(e){ toast("Number: "+PAY_NUMBER); } };
   $("#shot").onchange = e => {
     shotFile = e.target.files[0] || null;
     const pv = $("#prev");
@@ -470,7 +461,7 @@ async function uploadShot(file){
   const fd = new FormData(); fd.append("file", file); fd.append("upload_preset", UPLOAD_PRESET);
   const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method:"POST", body:fd });
   const j = await r.json();
-  if (!j.secure_url) throw new Error((j.error && j.error.message) || "upload fail");
+  if (!j.secure_url) throw new Error((j.error && j.error.message) || "upload failed");
   return j.secure_url;
 }
 
@@ -478,10 +469,10 @@ async function submitOrder(){
   const g = GAMES.find(x=>x.id===current.game), it = current.item;
   const id1 = $("#gid").value.trim(), id2 = $("#gid2").value.trim(), err = $("#err");
   err.textContent = "";
-  if (id1.length < 3) return err.textContent = "Apna ID sahi likho.";
-  if (id1 !== id2) return err.textContent = "Dono ID same nahi hain. Dobara check karo.";
-  if (!shotFile) return err.textContent = "Payment ka screenshot daalna zaroori hai.";
-  const btn = $("#save"); btn.disabled = true; btn.textContent = "Bhej raha hoon...";
+  if (id1.length < 3) return err.textContent = "Please enter a valid ID.";
+  if (id1 !== id2) return err.textContent = "The two IDs do not match. Please check again.";
+  if (!shotFile) return err.textContent = "Please upload your payment screenshot.";
+  const btn = $("#save"); btn.disabled = true; btn.textContent = "Sending...";
   try {
     const url = await uploadShot(shotFile);
     const ref = await addDoc(collection(db,"orders"), {
@@ -490,11 +481,11 @@ async function submitOrder(){
       screenshot: url, status: "pending", createdAt: serverTimestamp()
     });
     notifyOwner(ref.id);
-    modal("✅","Payment successful","Aapka payment successful hai. Kuch minute ruko, hum payment check kar rahe hain. Status 🔔 me dikhega.","Home par jao",()=>go("home"));
+    modal("✅","Payment successful","Your payment is successful. Please wait a few minutes while we check the payment. You can track the status in 🔔.","Go to Home",()=>go("home"));
   } catch(e){
     console.error(e);
-    err.textContent = "Order nahi gaya: " + (e.message || e) + ". Dobara try karo.";
-    btn.disabled = false; btn.textContent = "💾 Save / Order bhejo";
+    err.textContent = "Order failed: " + (e.message || e) + ". Please try again.";
+    btn.disabled = false; btn.textContent = "💾 Save and place order";
   }
 }
 
@@ -502,15 +493,15 @@ async function notifyOwner(orderId){
   try {
     const idToken = await me.getIdToken();
     await fetch("/.netlify/functions/notify", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ orderId, idToken }) });
-  } catch(e){ console.warn("notify fail", e); }
+  } catch(e){ console.warn("notify failed", e); }
 }
 
 function renderNotifs(){
-  app$.innerHTML = `<div class="page-title"><button class="back" id="bk">←</button>🔔 Payment record</div>` +
+  app$.innerHTML = `<div class="page-title"><button class="back" id="bk">←</button>🔔 Payment records</div>` +
     (myOrders.length ? myOrders.map(o=>{
       const st = o.status;
       const label = st==="approved"?"Success":st==="rejected"?"Rejected":"Checking";
-      const msg = st==="approved"?"Payment success. Top-up ho gaya. Please phir visit karna 🙏":st==="rejected"?"Payment check nahi hua. Support se baat karo.":"Payment check ho raha hai. Thoda ruko.";
+      const msg = st==="approved"?"Payment successful. Your top-up is done. Please visit again 🙏":st==="rejected"?"We could not verify this payment. Please contact support.":"We are checking your payment. Please wait a few minutes.";
       return `<div class="card"><div class="n-row">
         <div class="dot">${st==="approved"?"✅":st==="rejected"?"❌":"⏳"}</div>
         <div style="flex:1"><b>${esc(o.game)} — ${esc(o.item)}</b>
@@ -518,7 +509,7 @@ function renderNotifs(){
         <div class="muted">${fmtDate(o)}</div>
         <div style="margin:6px 0"><span class="chip ${st}">${label}</span></div>
         <div style="font-size:14px">${msg}</div></div></div></div>`;
-    }).join("") : `<div class="card muted" style="text-align:center">Abhi koi order nahi hai.</div>`);
+    }).join("") : `<div class="card muted" style="text-align:center">No orders yet.</div>`);
   $("#bk").onclick = () => go("home");
 }
 
@@ -527,13 +518,13 @@ function renderSupport(){
     <div class="page-title">🎧 Customer Support</div>
     <div class="card" style="text-align:center">
       <div style="font-size:52px">📧</div>
-      <p>Koi problem ho to is Gmail par likho:</p>
+      <p>If you have any problem, email us at:</p>
       <b style="word-break:break-all;font-size:17px">${SUPPORT_EMAIL}</b>
-      <a href="mailto:${SUPPORT_EMAIL}?subject=GameDoko Support"><button class="btn">✉️ Email bhejo</button></a>
-      <button class="btn alt" id="cpm">📋 Email copy karo</button>
-      <p class="muted">Email me apna naam, order ka game aur ID likhna.</p>
+      <a href="mailto:${SUPPORT_EMAIL}?subject=GameDoko Support"><button class="btn">✉️ Send email</button></a>
+      <button class="btn alt" id="cpm">📋 Copy email</button>
+      <p class="muted">Please include your name, game and ID in the email.</p>
     </div>`;
-  $("#cpm").onclick = async () => { try{ await navigator.clipboard.writeText(SUPPORT_EMAIL); toast("Email copy ho gaya"); }catch(e){ toast(SUPPORT_EMAIL); } };
+  $("#cpm").onclick = async () => { try{ await navigator.clipboard.writeText(SUPPORT_EMAIL); toast("Email copied"); }catch(e){ toast(SUPPORT_EMAIL); } };
 }
 
 function renderAbout(){
@@ -542,7 +533,7 @@ function renderAbout(){
     <div class="card" style="text-align:center">
       <div style="font-size:60px">🎮</div>
       <h2 style="margin:4px 0">GameDoko</h2>
-      <p class="muted">Free Fire, PUBG, Mobile Legends, Clash of Clans aur YouTube Premium ka top-up ek hi jagah. Payment eSewa se, status app ke andar.</p>
+      <p class="muted">Top up Free Fire, PUBG, Mobile Legends, Clash of Clans and YouTube Premium in one place. Pay with eSewa and track your order status inside the app.</p>
       <p class="muted">Beta version 1.0</p>
       <b>Made by Krish Rimal</b>
     </div>`;
@@ -583,14 +574,14 @@ function renderAdmin(){
           </div>
         </div>
         ${o.status==="pending"?`<div class="row2"><button class="btn" data-ap="${o.id}">✅ Approve</button><button class="btn red" data-rj="${o.id}">❌ Reject</button></div>`:""}
-      </div>`).join("") : `<div class="card muted" style="text-align:center">Koi order nahi.</div>`);
+      </div>`).join("") : `<div class="card muted" style="text-align:center">No orders.</div>`);
   $("#bk").onclick = () => go("settings");
   app$.querySelectorAll("[data-ap]").forEach(b => b.onclick = () => setStatus(b.dataset.ap,"approved"));
   app$.querySelectorAll("[data-rj]").forEach(b => b.onclick = () => setStatus(b.dataset.rj,"rejected"));
 }
 async function setStatus(id, status){
-  if (!confirm(status==="approved"?"Payment aaya? Approve karna hai?":"Reject karna hai?")) return;
-  try { await updateDoc(doc(db,"orders",id), { status, updatedAtMs: Date.now() }); toast(status==="approved"?"Approve ho gaya":"Reject ho gaya"); }
+  if (!confirm(status==="approved"?"Did the payment arrive? Approve this order?":"Reject this order?")) return;
+  try { await updateDoc(doc(db,"orders",id), { status, updatedAtMs: Date.now() }); toast(status==="approved"?"Order approved":"Order rejected"); }
   catch(e){ toast("Error: " + e.message); }
 }
 </script>
