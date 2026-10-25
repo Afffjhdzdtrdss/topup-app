@@ -284,8 +284,20 @@ const GAMES = [
   ]}
 ];
 const gicon = g => g.img ? `<img class="gimg" src="${g.img}" alt="">` : `<span class="em">${g.icon}</span>`;
-/* Listed prices are already the discounted prices. The old (struck) price is worked back from the discount %, rounded to nearest Rs 5. */
-const wasOf = (g, p) => Math.round(p / (1 - g.off/100) / 5) * 5;
+/* Listed prices are already the discounted prices. The old (struck) price is worked back from the discount %. */
+function offOf(g, p){
+  if (g.id === "pubg") return 0;                 // PUBG: no OFF tag
+  if (p > 1000) return 4;                        // above Rs 1000: 4% OFF
+  if (g.id === "ff" && p === 115) return 2;      // Free Fire 115 diamonds: 2% OFF
+  if (p >= 400) return g.id === "ml" ? 3 : g.id === "ff" ? 2 : 0;  // Mobile Legends 3%, Free Fire 2%
+  return 0;                                      // below Rs 400: no tag
+}
+const wasOf = (pct, p) => Math.round(p / (1 - pct/100));
+const maxOff = g => Math.max(0, ...g.cats.flatMap(c => c.items.map(it => offOf(g, it[1]))));
+function priceHTML(g, p){
+  const pc = offOf(g, p);
+  return pc > 0 ? `<s class="muted" style="font-weight:400;font-size:12px">${rs(wasOf(pc,p))}</s><br>${rs(p)} <span class="off">${pc}% OFF</span>` : rs(p);
+}
 const rs = n => "Rs " + Number(n).toLocaleString("en-IN");
 
 const NEPAL_FLAG = `<svg viewBox="0 0 60 74" xmlns="http://www.w3.org/2000/svg" aria-label="Nepal flag"><path d="M5 3 53 37H25l30 34H5z" fill="#DC143C" stroke="#003893" stroke-width="4" stroke-linejoin="round"/><circle cx="19" cy="49" r="5" fill="#fff"/><path d="M13 22a7 7 0 1 0 12 0 6 6 0 0 1-12 0z" fill="#fff"/></svg>`;
@@ -431,15 +443,29 @@ function fmtDate(o){ const d = new Date(ts(o)); return d.toLocaleString("en-GB",
 function fmtTime(m){ const d = m.createdAt && m.createdAt.toDate ? m.createdAt.toDate() : new Date(); return d.toLocaleString("en-GB",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}); }
 
 /* ---------- Navigation ---------- */
-function go(page, extra={}){
+let historyInit = false;
+function go(page, extra={}, push=true){
   if (msgUnsub) { msgUnsub(); msgUnsub = null; }
   current = { page, ...extra };
+  if (push) {
+    try {
+      if (!historyInit) { history.replaceState({ page, extra }, ""); historyInit = true; }
+      else history.pushState({ page, extra }, "");
+    } catch(e){}
+  }
   document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("active", b.dataset.go === page));
   $("#profileSheet").classList.add("hidden");
   render(); updateFab(); window.scrollTo(0,0);
 }
 document.querySelectorAll("#nav button").forEach(b => b.onclick = () => go(b.dataset.go));
 $("#fab").onclick = () => go("chat");
+/* Phone/browser Back button: go to the previous page inside the app instead of closing it */
+window.addEventListener("popstate", e => {
+  if (!me) return;
+  const st = e.state;
+  if (st && st.page) go(st.page, st.extra || {}, false);
+  else go("home", {}, false);
+});
 $("#btnSettings").onclick = () => go("settings");
 $("#btnBell").onclick = () => { try{ localStorage.setItem("gd_seen_"+me.uid, String(Date.now())) }catch(e){} updateBadge(); go("notifications"); };
 $("#btnProfile").onclick = () => {
@@ -483,7 +509,7 @@ function renderHome(){
     <div class="games">
       ${GAMES.map(g=>`<button class="game" data-g="${g.id}" style="background:${g.bg}">
         ${gicon(g)}
-        <span><span class="wm ${g.wm}">${esc(g.name)}</span><small><span class="off" style="margin:0 6px 0 0">${g.off}% OFF</span>Tap to top up</small></span>
+        <span><span class="wm ${g.wm}">${esc(g.name)}</span><small>${maxOff(g)>0?`<span class="off" style="margin:0 6px 0 0">Up to ${maxOff(g)}% OFF</span>`:""}Tap to top up</small></span>
         <span class="go">›</span></button>`).join("")}
     </div>
     <div class="card why" style="margin-top:16px">
@@ -503,7 +529,7 @@ function renderGame(){
     ${g.cats.map((c,ci)=>`<div class="sect">${esc(c.name)}</div>${c.items.map((it,ii)=>`
       <button class="pkg" data-c="${ci}" data-i="${ii}">
         <div class="l"><div class="em">${it[2]}</div><b>${esc(it[0])}</b></div>
-        <div class="price" style="text-align:right"><s class="muted" style="font-weight:400;font-size:12px">${rs(wasOf(g,it[1]))}</s><br>${rs(it[1])} <span class="off">${g.off}% OFF</span></div></button>`).join("")}`).join("")}`;
+        <div class="price" style="text-align:right">${priceHTML(g,it[1])}</div></button>`).join("")}`).join("")}`;
   $("#bk").onclick = () => go("home");
   app$.querySelectorAll(".pkg").forEach(b => b.onclick = () => {
     const it = g.cats[b.dataset.c].items[b.dataset.i];
@@ -522,7 +548,7 @@ function renderOrder(){
     <div class="card">
       <div class="sum"><span class="muted">Game</span><b>${esc(g.name)}</b></div>
       <div class="sum"><span class="muted">Package</span><b>${esc(it.name)}</b></div>
-      <div class="sum"><span class="muted">Price <span class="off">${g.off}% OFF</span></span><b><s class="muted" style="font-weight:400">${rs(wasOf(g,it.price))}</s> ${rs(it.price)}</b></div>
+      <div class="sum"><span class="muted">Price${offOf(g,it.price)>0?` <span class="off">${offOf(g,it.price)}% OFF</span>`:""}</span><b>${offOf(g,it.price)>0?`<s class="muted" style="font-weight:400">${rs(wasOf(offOf(g,it.price),it.price))}</s> `:""}${rs(it.price)}</b></div>
       <div class="sum"><span class="muted">Service charge</span><b>${rs(SERVICE_CHARGE)}</b></div>
       <div class="sum"><span class="muted">Total to pay</span><b style="color:var(--blue2);font-size:18px">${rs(total)}</b></div>
     </div>
