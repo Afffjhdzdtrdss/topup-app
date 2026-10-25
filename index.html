@@ -602,6 +602,13 @@ async function notifyOwner(orderId){
   } catch(e){ console.warn("notify failed", e); }
 }
 
+async function notifyChat(messageId){
+  try {
+    const idToken = await me.getIdToken();
+    await fetch("/.netlify/functions/notify", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ type:"chat", uid: me.uid, messageId, idToken }) });
+  } catch(e){ console.warn("chat notify failed", e); }
+}
+
 function renderNotifs(){
   app$.innerHTML = `<div class="page-title"><button class="back" id="bk">←</button>🔔 Payment records</div>` +
     (myOrders.length ? myOrders.map(o=>{
@@ -698,8 +705,9 @@ function renderChat(){
     const t = $("#cin").value.trim(); if (!t) return;
     $("#cin").value = "";
     try {
-      await addDoc(collection(db,"chats",me.uid,"messages"), { from:"user", text:t, createdAt: serverTimestamp() });
+      const mref = await addDoc(collection(db,"chats",me.uid,"messages"), { from:"user", text:t, createdAt: serverTimestamp() });
       await setDoc(doc(db,"chats",me.uid), { uid:me.uid, userName:profile.name, email:me.email, lastMessage:t, lastFrom:"user", lastAt: serverTimestamp(), unreadAdmin:true, unreadUser:false }, { merge:true });
+      notifyChat(mref.id);
     } catch(err){ toast("Message not sent: " + err.message); }
   };
 }
