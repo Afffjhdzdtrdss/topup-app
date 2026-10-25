@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>GameDoko</title>
+<style>
+:root{--bg:#f4f6fb;--card:#ffffff;--text:#121826;--muted:#667085;--line:#e4e7ee;--blue:#1d4ed8;--blue2:#2563eb;--gold:#f59e0b;--ok:#16a34a;--bad:#dc2626;--warn:#d97706}
+[data-theme="dark"]{--bg:#0d1117;--card:#161b24;--text:#eef1f6;--muted:#98a2b3;--line:#262d3a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+button{font:inherit;cursor:pointer;border:0}
+input{font:inherit}
+.hidden{display:none!important}
+
+/* Splash */
+#splash{position:fixed;inset:0;background:linear-gradient(160deg,#1e3a8a,#2563eb);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;transition:opacity .5s}
+#splash .sticker{font-size:110px;animation:wave 1.6s ease-in-out infinite;transform-origin:70% 80%}
+#splash h1{font-size:44px;margin:10px 0 4px;letter-spacing:1px}
+#splash p{margin:0;opacity:.85}
+@keyframes wave{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+
+/* Login & name screens */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;background:linear-gradient(160deg,#1e3a8a,#2563eb);color:#fff;z-index:90;text-align:center}
+.screen .sticker{font-size:80px}
+.screen h2{margin:8px 0 6px;font-size:30px}
+.screen p{margin:0 0 26px;opacity:.9}
+.whitebtn{background:#fff;color:#111;border-radius:14px;padding:14px 22px;font-weight:700;font-size:16px;display:flex;align-items:center;gap:10px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.screen input{width:100%;max-width:340px;padding:14px;border-radius:12px;border:0;font-size:16px;margin-bottom:14px;text-align:center}
+
+/* Top bar */
+#topbar{position:fixed;top:0;left:0;right:0;height:58px;background:#000;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:50;padding-top:env(safe-area-inset-top)}
+#topbar .left,#topbar .right{display:flex;align-items:center;gap:6px;min-width:96px}
+#topbar .right{justify-content:flex-end}
+#topbar .title{font-weight:800;font-size:20px;letter-spacing:.5px}
+#topbar .title span{color:var(--gold)}
+.ibtn{background:transparent;color:#fff;font-size:22px;width:42px;height:42px;border-radius:50%;position:relative}
+.ibtn:active{background:#222}
+.badge{position:absolute;top:2px;right:2px;background:var(--bad);color:#fff;font-size:11px;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--gold);color:#000;font-weight:800;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+
+/* Layout */
+#app{padding:70px 14px 86px;max-width:560px;margin:0 auto}
+.page-title{font-size:20px;font-weight:800;margin:6px 0 12px;display:flex;align-items:center;gap:10px}
+.back{background:var(--card);color:var(--text);border:1px solid var(--line);width:36px;height:36px;border-radius:50%;font-size:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.muted{color:var(--muted);font-size:14px}
+
+/* Bottom nav */
+#nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;z-index:50;padding-bottom:env(safe-area-inset-bottom)}
+#nav button{flex:1;background:transparent;color:var(--muted);padding:9px 0 8px;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px}
+#nav button span{font-size:22px}
+#nav button.active{color:var(--blue2);font-weight:700}
+
+/* Home */
+.hello{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;border-radius:18px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
+.hello h2{margin:0;font-size:26px}
+.hello p{margin:4px 0 0;opacity:.9}
+.hello .big{position:absolute;right:12px;top:6px;font-size:58px;opacity:.9}
+.games{display:grid;gap:10px}
+.game{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;color:var(--text);text-align:left;width:100%}
+.game .ic{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0}
+.game b{display:block;font-size:17px}
+.game small{color:var(--muted)}
+.game .go{margin-left:auto;color:var(--muted);font-size:20px}
+.steps{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.steps li{display:flex;gap:10px;align-items:flex-start;font-size:14px}
+.steps li i{font-style:normal;background:var(--blue2);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px}
+
+/* Packages */
+.sect{font-weight:800;margin:14px 2px 8px;color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.8px}
+.pkg{display:flex;align-items:center;justify-content:space-between;width:100%;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px;color:var(--text);text-align:left}
+.pkg:active{border-color:var(--blue2)}
+.pkg .l{display:flex;align-items:center;gap:12px}
+.pkg .em{font-size:30px;width:44px;text-align:center}
+.pkg .price{font-weight:800;color:var(--blue2);font-size:16px;white-space:nowrap}
+
+/* Forms */
+label{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
+.inp{width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--text);font-size:16px}
+.inp:focus{outline:0;border-color:var(--blue2)}
+.btn{width:100%;background:var(--blue2);color:#fff;font-weight:800;padding:15px;border-radius:14px;font-size:16px;margin-top:16px}
+.btn:disabled{opacity:.6}
+.btn.alt{background:var(--card);color:var(--text);border:1px solid var(--line);margin-top:10px}
+.btn.red{background:var(--bad)}
+.sum{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line);font-size:15px}
+.sum:last-child{border:0}
+.qrbox{text-align:center}
+.qrbox img{width:100%;max-width:300px;border-radius:14px;border:1px solid var(--line)}
+.amt{font-size:30px;font-weight:900;color:var(--blue2);margin:6px 0}
+.copy{background:var(--bg);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:8px 14px;font-weight:700;margin-top:6px}
+.shot{width:100%;max-height:260px;object-fit:contain;border-radius:12px;margin-top:10px;border:1px solid var(--line)}
+.err{color:var(--bad);font-size:14px;margin-top:8px;min-height:18px}
+
+/* Orders / notifications */
+.chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;color:#fff}
+.chip.pending{background:var(--warn)}.chip.approved{background:var(--ok)}.chip.rejected{background:var(--bad)}
+.n-row{display:flex;gap:12px;align-items:flex-start}
+.n-row .dot{font-size:26px}
+.n-row b{display:block}
+.thumb{width:70px;height:70px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.row2{display:flex;gap:8px}
+.row2 .btn{margin-top:10px;padding:12px}
+
+/* Settings */
+.set{display:flex;align-items:center;justify-content:space-between;padding:14px 4px;border-bottom:1px solid var(--line);width:100%;background:transparent;color:var(--text);text-align:left;font-size:16px}
+.set:last-child{border:0}
+.switch{width:50px;height:28px;background:var(--line);border-radius:20px;position:relative;transition:.2s;flex-shrink:0}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;background:#fff;border-radius:50%;transition:.2s}
+.switch.on{background:var(--blue2)}
+.switch.on::after{left:25px}
+
+/* Modal / toast */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:120;padding:24px}
+.modal{background:var(--card);border-radius:20px;padding:24px;max-width:340px;width:100%;text-align:center}
+.modal .em{font-size:56px}
+.modal h3{margin:6px 0}
+.sheet{position:fixed;top:64px;right:10px;left:10px;max-width:340px;margin-left:auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;z-index:70;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+#toast{position:fixed;left:14px;right:14px;top:70px;background:#111;color:#fff;padding:14px;border-radius:14px;z-index:130;transform:translateY(-140px);transition:transform .35s;max-width:520px;margin:0 auto;font-size:14px}
+#toast.show{transform:translateY(0)}
+.foot{text-align:center;color:var(--muted);font-size:13px;margin:18px 0}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="sticker">🙏</div>
+  <h1>Namaste</h1>
+  <p>GameDoko</p>
+</div>
+
+<div id="loginScreen" class="screen hidden">
+  <div class="sticker">🙏</div>
+  <h2>Namaste! Welcome to GameDoko</h2>
+  <p>Game top-up, sasto ra bharosa ko sath</p>
+  <button class="whitebtn" id="googleBtn"><span style="font-size:20px">G</span> Google se Login karo</button>
+  <div id="loginErr" style="margin-top:14px;color:#fecaca;font-size:14px"></div>
+</div>
+
+<div id="nameScreen" class="screen hidden">
+  <div class="sticker">😊</div>
+  <h2>Aapka naam kya hai?</h2>
+  <p>Ye naam app me dikhega</p>
+  <input id="nameInput" maxlength="30" placeholder="Apna naam likho">
+  <button class="whitebtn" id="nameSave">Aage badho →</button>
+</div>
+
+<div id="main" class="hidden">
+  <div id="topbar">
+    <div class="left">
+      <button class="ibtn" id="btnSettings" aria-label="Settings">⚙️</button>
+      <button class="ibtn" id="btnBell" aria-label="Notifications">🔔<span class="badge hidden" id="bellBadge">0</span></button>
+    </div>
+    <div class="title">Game<span>Doko</span></div>
+    <div class="right"><div class="avatar" id="btnProfile"></div></div>
+  </div>
+
+  <div id="app"></div>
+
+  <div id="nav">
+    <button data-go="home" class="active"><span>🏠</span>Home</button>
+    <button data-go="support"><span>🎧</span>Customer Support</button>
+    <button data-go="about"><span>ℹ️</span>About this app</button>
+  </div>
+</div>
+
+<div id="profileSheet" class="sheet hidden"></div>
+<div id="toast"></div>
+<div id="modalHost"></div>
+
+<script>
+/* Agar main app code na chale (jaise file seedha phone se khola), to splash par atke nahi */
+setTimeout(function(){
+  if(window.__gd_ready) return;
+  var sp=document.getElementById('splash'); if(sp) sp.remove();
+  var ls=document.getElementById('loginScreen'); ls.classList.remove('hidden');
+  var b=document.getElementById('googleBtn'); if(b) b.style.display='none';
+  document.getElementById('loginErr').innerHTML='Ye file seedha kholne se nahi chalti.<br>Pehle app ko Netlify par daalo aur uske link se kholo.';
+},4000);
+</script>
+<script type="module">
+window.__gd_ready = true;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, addDoc, updateDoc, collection, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ============ CONFIG (yahan badalna ho to badlo) ============ */
+const firebaseConfig = {
+  apiKey: "AIzaSyBkQhQKr4z6t4f1nUfHB1UA9rNzopwZjFE",
+  authDomain: "topup-center-577dc.firebaseapp.com",
+  projectId: "topup-center-577dc",
+  storageBucket: "topup-center-577dc.firebasestorage.app",
+  messagingSenderId: "659072767985",
+  appId: "1:659072767985:web:0c69bdac0959422daad650"
+};
+const CLOUD_NAME = "ft1osnio";
+const UPLOAD_PRESET = "topup_upload";
+const ADMIN_EMAIL = "nepalihoniyrr0@gmail.com";   // sirf ye Google account admin panel dekh sakta hai
+const SUPPORT_EMAIL = "nepalihoniyrr0@gmail.com";
+const PAY_NAME = "Muna Rimal";
+const PAY_NUMBER = "9806013655";
+const QR_IMAGE = "qr.jpg";
+const MARKUP = 25;   // har rate me +25 Rs
+/* ============================================================ */
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+/* ---------- Games & rates (original rate; +MARKUP khud judta hai) ---------- */
+const GAMES = [
+  { id:"ff", name:"Free Fire", icon:"🔥", color:"#fde68a", idLabel:"Free Fire UID", cats:[
+    { name:"Diamonds", items:[["115 💎",99,"💎"],["240 💎",199,"💎"],["355 💎",299,"💎"],["480 💎",399,"💎"],["850 💎",699,"💎"],["2530 💎",1999,"💎"],["5060 💎",3999,"💎"]] },
+    { name:"Passes", items:[["Weekly Pass",199,"📅"],["Monthly Pass",999,"🎫"]] }
+  ]},
+  { id:"pubg", name:"PUBG Mobile", icon:"🎯", color:"#bbf7d0", idLabel:"PUBG Character ID", cats:[
+    { name:"UC Packs", items:[["60 UC",180,"💵"],["325 UC",750,"💵"],["660 UC",1500,"💵"],["1800 UC",3700,"💵"],["3850 UC",7400,"💵"],["8100 UC",14700,"💵"],["16200 UC",29000,"💵"]] },
+    { name:"Monthly Pass", items:[["Prime",170,"🎫"],["Prime Plus",1600,"🎟️"]] }
+  ]},
+  { id:"ml", name:"Mobile Legends", icon:"⚔️", color:"#bfdbfe", idLabel:"User ID (Zone ID)", cats:[
+    { name:"Diamonds", items:[["50 + 5 💎",150,"💎"],["100 + 10 💎",290,"💎"],["150 + 15 💎",570,"💎"],["312 + 31 💎",850,"💎"],["500 + 65 💎",1440,"💎"],["1000 + 130 💎",2850,"💎"]] },
+    { name:"Pass", items:[["Weekly Pass",250,"🎫"]] }
+  ]},
+  { id:"coc", name:"Clash of Clans", icon:"🏰", color:"#fecaca", idLabel:"Player Tag (#...)", cats:[
+    { name:"Game Pass", items:[["Gold Pass [$0.99 - $1.29]",199,"🎫"],["Gold Pass [$4 - $5]",750,"🎫"],["Mini Event Pass",225,"🧧"],["Event Pass",600,"🧧"]] },
+    { name:"Cosmetics", items:[["Hero Skin [$4.49]",750,"🤴"],["Sceneries [$3.19]",520,"🌄"],["Limited Sceneries [$4.49]",750,"🌄"]] },
+    { name:"Gem Packs", items:[["500 Gems [$2.29]",370,"🔰"],["2500 Gems [$8.99]",1500,"🔰"],["6500 Gems [$21.99]",3650,"🔰"],["14000 Gems [$43.99]",7250,"🔰"]] }
+  ]},
+  { id:"yt", name:"YouTube Premium", icon:"▶️", color:"#fecdd3", idLabel:"Gmail (jis par Premium chahiye)", cats:[
+    { name:"Plans", items:[["1 Month [Family Join]",159,"📺"],["12 Months [Individual Plan]",4499,"📺"]] }
+  ]}
+];
+const rs = n => "Rs " + Number(n).toLocaleString("en-IN");
+const priceOf = base => base + MARKUP;
+
+/* ---------- State ---------- */
+let me = null, profile = null, myOrders = [], adminOrders = [];
+let unsubOrders = null, unsubAdmin = null;
+let current = { page:"home", game:null, item:null };
+const $ = s => document.querySelector(s);
+const app$ = $("#app");
+const isAdmin = () => me && me.email && me.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- Theme ---------- */
+function setTheme(t){ document.documentElement.setAttribute("data-theme", t); try{localStorage.setItem("gd_theme", t)}catch(e){} }
+try{ setTheme(localStorage.getItem("gd_theme") || "light") }catch(e){}
+
+/* ---------- Toast / Modal ---------- */
+let toastTimer;
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("show"),4500); }
+function modal(emoji,title,text,btnText="Theek hai",onClose){
+  $("#modalHost").innerHTML = `<div class="modal-bg"><div class="modal"><div class="em">${emoji}</div><h3>${esc(title)}</h3><p class="muted">${esc(text)}</p><button class="btn" id="mOk">${esc(btnText)}</button></div></div>`;
+  $("#mOk").onclick = () => { $("#modalHost").innerHTML=""; onClose && onClose(); };
+}
+
+/* ---------- Splash ---------- */
+const splashStart = Date.now();
+function hideSplash(){
+  const wait = Math.max(0, 2200 - (Date.now() - splashStart));
+  setTimeout(()=>{ const s=$("#splash"); s.style.opacity=0; setTimeout(()=>s.remove(),500); }, wait);
+}
+
+/* ---------- Auth ---------- */
+$("#googleBtn").onclick = async () => {
+  $("#loginErr").textContent = "";
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+  catch(e){ $("#loginErr").textContent = "Login nahi hua: " + (e.code || e.message); }
+};
+
+onAuthStateChanged(auth, async user => {
+  if (!user) {
+    me = null; profile = null;
+    if (unsubOrders) unsubOrders(); if (unsubAdmin) unsubAdmin();
+    $("#main").classList.add("hidden"); $("#nameScreen").classList.add("hidden");
+    $("#loginScreen").classList.remove("hidden"); hideSplash(); return;
+  }
+  me = user;
+  try {
+    const snap = await getDoc(doc(db,"users",user.uid));
+    profile = snap.exists() ? snap.data() : null;
+  } catch(e){ profile = null; }
+  $("#loginScreen").classList.add("hidden");
+  if (!profile || !profile.name) {
+    $("#nameInput").value = user.displayName || "";
+    $("#nameScreen").classList.remove("hidden");
+  } else { enterApp(); }
+  hideSplash();
+});
+
+$("#nameSave").onclick = async () => {
+  const name = $("#nameInput").value.trim();
+  if (name.length < 2) { $("#nameInput").style.outline="3px solid #fca5a5"; return; }
+  profile = { name, email: me.email, photo: me.photoURL || "", createdAt: serverTimestamp() };
+  try { await setDoc(doc(db,"users",me.uid), profile, { merge:true }); } catch(e){ toast("Naam save nahi hua, dobara try karo"); return; }
+  $("#nameScreen").classList.add("hidden"); enterApp();
+};
+
+function enterApp(){
+  $("#main").classList.remove("hidden");
+  renderAvatar();
+  watchOrders();
+  go("home");
+}
+function renderAvatar(){
+  const a = $("#btnProfile");
+  a.innerHTML = me.photoURL ? `<img src="${esc(me.photoURL)}" referrerpolicy="no-referrer">` : esc((profile.name||"?")[0].toUpperCase());
+}
+
+/* ---------- Orders live ---------- */
+let firstLoad = true;
+function watchOrders(){
+  if (unsubOrders) unsubOrders();
+  firstLoad = true;
+  unsubOrders = onSnapshot(query(collection(db,"orders"), where("uid","==",me.uid)), snap => {
+    if (!firstLoad) {
+      snap.docChanges().forEach(ch => {
+        if (ch.type === "modified") {
+          const o = ch.doc.data();
+          if (o.status === "approved") toast("✅ Aapka payment success ho gaya, top-up ho gaya. Please phir visit karna 🙏");
+          if (o.status === "rejected") toast("❌ Payment check nahi hua. Notification me dekho ya support se baat karo.");
+        }
+      });
+    }
+    firstLoad = false;
+    myOrders = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort((a,b)=>ts(b)-ts(a));
+    updateBadge();
+    if (current.page === "notifications") render();
+  }, err => console.warn(err));
+  if (isAdmin()) {
+    if (unsubAdmin) unsubAdmin();
+    unsubAdmin = onSnapshot(collection(db,"orders"), snap => {
+      adminOrders = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort((a,b)=>ts(b)-ts(a));
+      if (current.page === "admin") render();
+    });
+  }
+}
+const ts = o => o.createdAt && o.createdAt.toMillis ? o.createdAt.toMillis() : Date.now();
+function seenAt(){ try{ return Number(localStorage.getItem("gd_seen_"+me.uid)||0) }catch(e){ return 0 } }
+function updateBadge(){
+  const seen = seenAt();
+  const n = myOrders.filter(o => (o.status === "approved" || o.status === "rejected") && (o.updatedAtMs||0) > seen).length;
+  const b = $("#bellBadge"); b.textContent = n; b.classList.toggle("hidden", n === 0);
+}
+function fmtDate(o){ const d = new Date(ts(o)); return d.toLocaleString("en-GB",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}); }
+
+/* ---------- Navigation ---------- */
+function go(page, extra={}){
+  current = { page, ...extra };
+  document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("active", b.dataset.go === page));
+  $("#profileSheet").classList.add("hidden");
+  render(); window.scrollTo(0,0);
+}
+document.querySelectorAll("#nav button").forEach(b => b.onclick = () => go(b.dataset.go));
+$("#btnSettings").onclick = () => go("settings");
+$("#btnBell").onclick = () => { try{ localStorage.setItem("gd_seen_"+me.uid, String(Date.now())) }catch(e){} updateBadge(); go("notifications"); };
+$("#btnProfile").onclick = () => {
+  const s = $("#profileSheet");
+  if (!s.classList.contains("hidden")) { s.classList.add("hidden"); return; }
+  s.innerHTML = `
+    <div style="display:flex;gap:12px;align-items:center">
+      <div class="avatar" style="width:54px;height:54px;font-size:22px">${me.photoURL?`<img src="${esc(me.photoURL)}" referrerpolicy="no-referrer">`:esc((profile.name||"?")[0].toUpperCase())}</div>
+      <div><b style="font-size:18px">${esc(profile.name)}</b><div class="muted" style="word-break:break-all">${esc(me.email)}</div></div>
+    </div>
+    <div class="sum" style="margin-top:12px"><span class="muted">Total orders</span><b>${myOrders.length}</b></div>
+    <div class="sum"><span class="muted">Successful</span><b>${myOrders.filter(o=>o.status==="approved").length}</b></div>
+    <button class="btn alt" id="editName">✏️ Naam badlo</button>`;
+  s.classList.remove("hidden");
+  $("#editName").onclick = () => { s.classList.add("hidden"); $("#nameInput").value = profile.name; $("#nameScreen").classList.remove("hidden"); };
+};
+
+/* ---------- Render ---------- */
+function render(){
+  const p = current.page;
+  if (p === "home") return renderHome();
+  if (p === "game") return renderGame();
+  if (p === "order") return renderOrder();
+  if (p === "notifications") return renderNotifs();
+  if (p === "support") return renderSupport();
+  if (p === "about") return renderAbout();
+  if (p === "settings") return renderSettings();
+  if (p === "admin") return renderAdmin();
+}
+function greetWord(){ const h=new Date().getHours(); return h<12?"Suprabhat":h<17?"Namaskar":"Shubha sandhya"; }
+
+function renderHome(){
+  app$.innerHTML = `
+    <div class="hello"><div class="big">🙏</div>
+      <h2>Namaskar 🙏</h2>
+      <p>${esc(profile.name)}, kya top-up karna hai aaj?</p>
+    </div>
+    <div class="sect">Games</div>
+    <div class="games">
+      ${GAMES.map(g=>`<button class="game" data-g="${g.id}">
+        <div class="ic" style="background:${g.color}">${g.icon}</div>
+        <div><b>${esc(g.name)}</b><small>Top-up karne ke liye dabao</small></div><span class="go">›</span></button>`).join("")}
+    </div>
+    <div class="sect">Kaise kaam karta hai</div>
+    <div class="card"><ul class="steps">
+      <li><i>1</i><span>Game aur package chuno</span></li>
+      <li><i>2</i><span>Apna ID 2 baar daalo</span></li>
+      <li><i>3</i><span>eSewa QR se payment karo aur screenshot daalo</span></li>
+      <li><i>4</i><span>Hum check karke top-up kar denge. Status 🔔 me dikhega</span></li>
+    </ul></div>
+    <div class="foot">Made by Krish Rimal</div>`;
+  app$.querySelectorAll(".game").forEach(b => b.onclick = () => go("game",{game:b.dataset.g}));
+}
+
+function renderGame(){
+  const g = GAMES.find(x=>x.id===current.game);
+  app$.innerHTML = `
+    <div class="page-title"><button class="back" id="bk">←</button>${g.icon} ${esc(g.name)}</div>
+    ${g.cats.map((c,ci)=>`<div class="sect">${esc(c.name)}</div>${c.items.map((it,ii)=>`
+      <button class="pkg" data-c="${ci}" data-i="${ii}">
+        <div class="l"><div class="em">${it[2]}</div><b>${esc(it[0])}</b></div>
+        <div class="price">${rs(priceOf(it[1]))}</div></button>`).join("")}`).join("")}`;
+  $("#bk").onclick = () => go("home");
+  app$.querySelectorAll(".pkg").forEach(b => b.onclick = () => {
+    const it = g.cats[b.dataset.c].items[b.dataset.i];
+    go("order",{game:g.id,item:{name:it[0],price:priceOf(it[1]),em:it[2]}});
+  });
+}
+
+let shotFile = null;
+function renderOrder(){
+  shotFile = null;
+  const g = GAMES.find(x=>x.id===current.game), it = current.item;
+  app$.innerHTML = `
+    <div class="page-title"><button class="back" id="bk">←</button>Order confirm karo</div>
+    <div class="card">
+      <div class="sum"><span class="muted">Game</span><b>${esc(g.name)}</b></div>
+      <div class="sum"><span class="muted">Package</span><b>${esc(it.name)}</b></div>
+      <div class="sum"><span class="muted">Price</span><b>${rs(it.price)}</b></div>
+    </div>
+    <div class="card">
+      <label style="margin-top:0">${esc(g.idLabel)}</label>
+      <input class="inp" id="gid" autocomplete="off" placeholder="${esc(g.idLabel)} likho">
+      <label>${esc(g.idLabel)} dobara likho (confirm)</label>
+      <input class="inp" id="gid2" autocomplete="off" placeholder="Dobara wahi likho">
+    </div>
+    <div class="card qrbox">
+      <b>💳 Payment karo (eSewa)</b>
+      <div class="amt">${rs(it.price)}</div>
+      <img src="${QR_IMAGE}" alt="eSewa QR" onerror="this.outerHTML='<p class=muted>QR image nahi mili (qr.jpg upload karo)</p>'">
+      <div style="margin-top:8px"><b>${esc(PAY_NAME)}</b><div class="muted">eSewa: ${PAY_NUMBER}</div></div>
+      <button class="copy" id="cp">📋 Number copy karo</button>
+      <p class="muted" style="margin-bottom:0">Itna hi amount bhejo, phir niche screenshot daalo.</p>
+    </div>
+    <div class="card">
+      <b>📸 Payment ka screenshot</b>
+      <input type="file" accept="image/*" id="shot" class="inp" style="margin-top:8px">
+      <img id="prev" class="shot hidden">
+    </div>
+    <div class="err" id="err"></div>
+    <button class="btn" id="save">💾 Save / Order bhejo</button>`;
+  $("#bk").onclick = () => go("game",{game:g.id});
+  $("#cp").onclick = async () => { try{ await navigator.clipboard.writeText(PAY_NUMBER); toast("Number copy ho gaya"); }catch(e){ toast("Number: "+PAY_NUMBER); } };
+  $("#shot").onchange = e => {
+    shotFile = e.target.files[0] || null;
+    const pv = $("#prev");
+    if (shotFile) { pv.src = URL.createObjectURL(shotFile); pv.classList.remove("hidden"); } else pv.classList.add("hidden");
+  };
+  $("#save").onclick = submitOrder;
+}
+
+async function uploadShot(file){
+  const fd = new FormData(); fd.append("file", file); fd.append("upload_preset", UPLOAD_PRESET);
+  const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method:"POST", body:fd });
+  const j = await r.json();
+  if (!j.secure_url) throw new Error((j.error && j.error.message) || "upload fail");
+  return j.secure_url;
+}
+
+async function submitOrder(){
+  const g = GAMES.find(x=>x.id===current.game), it = current.item;
+  const id1 = $("#gid").value.trim(), id2 = $("#gid2").value.trim(), err = $("#err");
+  err.textContent = "";
+  if (id1.length < 3) return err.textContent = "Apna ID sahi likho.";
+  if (id1 !== id2) return err.textContent = "Dono ID same nahi hain. Dobara check karo.";
+  if (!shotFile) return err.textContent = "Payment ka screenshot daalna zaroori hai.";
+  const btn = $("#save"); btn.disabled = true; btn.textContent = "Bhej raha hoon...";
+  try {
+    const url = await uploadShot(shotFile);
+    const ref = await addDoc(collection(db,"orders"), {
+      uid: me.uid, userName: profile.name, email: me.email,
+      game: g.name, item: it.name, price: it.price, gameId: id1,
+      screenshot: url, status: "pending", createdAt: serverTimestamp()
+    });
+    notifyOwner(ref.id);
+    modal("✅","Payment successful","Aapka payment successful hai. Kuch minute ruko, hum payment check kar rahe hain. Status 🔔 me dikhega.","Home par jao",()=>go("home"));
+  } catch(e){
+    console.error(e);
+    err.textContent = "Order nahi gaya: " + (e.message || e) + ". Dobara try karo.";
+    btn.disabled = false; btn.textContent = "💾 Save / Order bhejo";
+  }
+}
+
+async function notifyOwner(orderId){
+  try {
+    const idToken = await me.getIdToken();
+    await fetch("/.netlify/functions/notify", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ orderId, idToken }) });
+  } catch(e){ console.warn("notify fail", e); }
+}
+
+function renderNotifs(){
+  app$.innerHTML = `<div class="page-title"><button class="back" id="bk">←</button>🔔 Payment record</div>` +
+    (myOrders.length ? myOrders.map(o=>{
+      const st = o.status;
+      const label = st==="approved"?"Success":st==="rejected"?"Rejected":"Checking";
+      const msg = st==="approved"?"Payment success. Top-up ho gaya. Please phir visit karna 🙏":st==="rejected"?"Payment check nahi hua. Support se baat karo.":"Payment check ho raha hai. Thoda ruko.";
+      return `<div class="card"><div class="n-row">
+        <div class="dot">${st==="approved"?"✅":st==="rejected"?"❌":"⏳"}</div>
+        <div style="flex:1"><b>${esc(o.game)} — ${esc(o.item)}</b>
+        <div class="muted">${rs(o.price)} • ID: ${esc(o.gameId)}</div>
+        <div class="muted">${fmtDate(o)}</div>
+        <div style="margin:6px 0"><span class="chip ${st}">${label}</span></div>
+        <div style="font-size:14px">${msg}</div></div></div></div>`;
+    }).join("") : `<div class="card muted" style="text-align:center">Abhi koi order nahi hai.</div>`);
+  $("#bk").onclick = () => go("home");
+}
+
+function renderSupport(){
+  app$.innerHTML = `
+    <div class="page-title">🎧 Customer Support</div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:52px">📧</div>
+      <p>Koi problem ho to is Gmail par likho:</p>
+      <b style="word-break:break-all;font-size:17px">${SUPPORT_EMAIL}</b>
+      <a href="mailto:${SUPPORT_EMAIL}?subject=GameDoko Support"><button class="btn">✉️ Email bhejo</button></a>
+      <button class="btn alt" id="cpm">📋 Email copy karo</button>
+      <p class="muted">Email me apna naam, order ka game aur ID likhna.</p>
+    </div>`;
+  $("#cpm").onclick = async () => { try{ await navigator.clipboard.writeText(SUPPORT_EMAIL); toast("Email copy ho gaya"); }catch(e){ toast(SUPPORT_EMAIL); } };
+}
+
+function renderAbout(){
+  app$.innerHTML = `
+    <div class="page-title">ℹ️ About this app</div>
+    <div class="card" style="text-align:center">
+      <div style="font-size:60px">🎮</div>
+      <h2 style="margin:4px 0">GameDoko</h2>
+      <p class="muted">Free Fire, PUBG, Mobile Legends, Clash of Clans aur YouTube Premium ka top-up ek hi jagah. Payment eSewa se, status app ke andar.</p>
+      <p class="muted">Beta version 1.0</p>
+      <b>Made by Krish Rimal</b>
+    </div>`;
+}
+
+function renderSettings(){
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  app$.innerHTML = `
+    <div class="page-title"><button class="back" id="bk">←</button>⚙️ Settings</div>
+    <div class="card" style="padding:4px 14px">
+      <div class="set" id="tg"><span>🌙 Dark mode</span><div class="switch ${dark?"on":""}" id="sw"></div></div>
+      <button class="set" id="ab"><span>ℹ️ About this app</span><span>›</span></button>
+      ${isAdmin()?`<button class="set" id="ad"><span>🛠️ Admin panel</span><span>›</span></button>`:""}
+      <button class="set" id="lo" style="color:var(--bad)"><span>🚪 Logout</span><span>›</span></button>
+    </div>`;
+  $("#bk").onclick = () => go("home");
+  $("#tg").onclick = () => { setTheme(dark?"light":"dark"); renderSettings(); };
+  $("#ab").onclick = () => go("about");
+  if (isAdmin()) $("#ad").onclick = () => go("admin");
+  $("#lo").onclick = async () => { await signOut(auth); location.reload(); };
+}
+
+function renderAdmin(){
+  if (!isAdmin()) return go("home");
+  const pend = adminOrders.filter(o=>o.status==="pending").length;
+  app$.innerHTML = `<div class="page-title"><button class="back" id="bk">←</button>🛠️ Admin (${pend} pending)</div>` +
+    (adminOrders.length ? adminOrders.map(o=>`
+      <div class="card">
+        <div style="display:flex;gap:12px">
+          <a href="${esc(o.screenshot)}" target="_blank"><img class="thumb" src="${esc(o.screenshot)}"></a>
+          <div style="flex:1;min-width:0">
+            <b>${esc(o.game)} — ${esc(o.item)}</b>
+            <div style="font-size:18px;font-weight:800;color:var(--blue2)">${rs(o.price)}</div>
+            <div>ID: <b style="user-select:all">${esc(o.gameId)}</b></div>
+            <div class="muted">${esc(o.userName)} • ${esc(o.email)}</div>
+            <div class="muted">${fmtDate(o)}</div>
+            <span class="chip ${o.status}">${o.status}</span>
+          </div>
+        </div>
+        ${o.status==="pending"?`<div class="row2"><button class="btn" data-ap="${o.id}">✅ Approve</button><button class="btn red" data-rj="${o.id}">❌ Reject</button></div>`:""}
+      </div>`).join("") : `<div class="card muted" style="text-align:center">Koi order nahi.</div>`);
+  $("#bk").onclick = () => go("settings");
+  app$.querySelectorAll("[data-ap]").forEach(b => b.onclick = () => setStatus(b.dataset.ap,"approved"));
+  app$.querySelectorAll("[data-rj]").forEach(b => b.onclick = () => setStatus(b.dataset.rj,"rejected"));
+}
+async function setStatus(id, status){
+  if (!confirm(status==="approved"?"Payment aaya? Approve karna hai?":"Reject karna hai?")) return;
+  try { await updateDoc(doc(db,"orders",id), { status, updatedAtMs: Date.now() }); toast(status==="approved"?"Approve ho gaya":"Reject ho gaya"); }
+  catch(e){ toast("Error: " + e.message); }
+}
+</script>
+</body>
+</html>
