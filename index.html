@@ -22,17 +22,23 @@ input,textarea{font:inherit}
 .hidden{display:none!important}
 
 /* Splash */
-#splash{position:fixed;inset:0;background:linear-gradient(160deg,#1e3a8a,#2563eb);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;transition:opacity .5s}
+#splash{position:fixed;inset:0;background:#1c1f26;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;transition:opacity .5s}
 #splash .sticker{font-size:110px;animation:wave 1.6s ease-in-out infinite;transform-origin:70% 80%}
 #splash h1{font-size:44px;margin:10px 0 4px;letter-spacing:1px}
 #splash p{margin:0;opacity:.85}
 @keyframes wave{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
 
 /* Login */
-.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;background:linear-gradient(160deg,#1e3a8a,#2563eb);color:#fff;z-index:90;text-align:center}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;background:#1c1f26;color:#fff;z-index:90;text-align:center}
 .screen .sticker{font-size:80px}
 .screen h2{margin:8px 0 6px;font-size:30px}
 .screen p{margin:0 0 26px;opacity:.9}
+.gbtn{background:#2a2f38;color:#fff;border:1px solid #3a4150;border-radius:14px;padding:14px 22px;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;gap:12px;width:100%;max-width:340px;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+.gbtn svg{width:22px;height:22px;flex-shrink:0}
+.gbtn:active{background:#343a46}
+.ginp{width:100%;max-width:340px;padding:14px;border-radius:12px;border:1px solid #3a4150;background:#2a2f38;color:#fff;font-size:16px;text-align:center;margin-bottom:12px;outline:0}
+.ginp::placeholder{color:#7d8696}
+.gsep{color:#7d8696;font-size:13px;margin:18px 0;letter-spacing:2px}
 .whitebtn{background:#fff;color:#111;border-radius:14px;padding:14px 22px;font-weight:700;font-size:16px;display:flex;align-items:center;gap:10px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 
 /* Top bar */
@@ -43,7 +49,8 @@ input,textarea{font:inherit}
 #topbar .title span{color:var(--gold)}
 .ibtn{background:transparent;color:#fff;font-size:22px;width:42px;height:42px;border-radius:50%;position:relative}
 .ibtn:active{background:#222}
-.badge{position:absolute;top:2px;right:2px;background:var(--bad);color:#fff;font-size:11px;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.ibtn svg{width:28px;height:28px;display:block;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
+.badge{position:absolute;top:0;right:0;background:linear-gradient(#ff6b6b,#d91e1e);box-shadow:0 2px 5px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.45);border:2px solid #14171c;font-weight:800;color:#fff;font-size:11px;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
 .avatar{width:38px;height:38px;border-radius:50%;background:var(--gold);color:#000;font-weight:800;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .avatar img{width:100%;height:100%;object-fit:cover}
 
@@ -186,15 +193,18 @@ label{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
   <div class="sticker">🙏</div>
   <h2>Namaste! Welcome to GameDoko</h2>
   <p>Fast and trusted game top-up</p>
-  <button class="whitebtn" id="googleBtn"><span style="font-size:20px">G</span> Continue with Google</button>
+  <button class="gbtn" id="googleBtn"><svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span>Continue with Google</span></button>
+  <div class="gsep">OR</div>
+  <input class="ginp" id="guestName" autocomplete="off" placeholder="Enter your name">
+  <button class="gbtn" id="guestBtn">👤 Continue as Guest</button>
   <div id="loginErr" style="margin-top:14px;color:#fecaca;font-size:14px"></div>
 </div>
 
 <div id="main" class="hidden">
   <div id="topbar">
     <div class="left">
-      <button class="ibtn" id="btnSettings" aria-label="Settings">⚙️<span class="badge hidden" id="gearBadge">0</span></button>
-      <button class="ibtn" id="btnBell" aria-label="Notifications">🔔<span class="badge hidden" id="bellBadge">0</span></button>
+      <button class="ibtn" id="btnSettings" aria-label="Settings"><svg viewBox="0 0 24 24"><defs><linearGradient id="gGear" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef1f6"/><stop offset="1" stop-color="#7d8799"/></linearGradient></defs><path fill="url(#gGear)" d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84a.48.48 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87a.49.49 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 0 0-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg><span class="badge hidden" id="gearBadge">0</span></button>
+      <button class="ibtn" id="btnBell" aria-label="Notifications"><svg viewBox="0 0 24 24"><defs><linearGradient id="gBell" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#c3cad6"/><stop offset="1" stop-color="#7d8799"/></linearGradient></defs><path fill="url(#gBell)" d="M12 2.2a6.3 6.3 0 0 0-6.3 6.3v4.1L3.9 16.6a1 1 0 0 0 .9 1.5h14.4a1 1 0 0 0 .9-1.5l-1.8-4V8.5A6.3 6.3 0 0 0 12 2.2z"/><path fill="#5d6678" d="M9.4 19.3a2.6 2.6 0 0 0 5.2 0z"/><ellipse cx="9.2" cy="6.6" rx="1.7" ry="1.1" fill="#fff" opacity=".7"/></svg><span class="badge hidden" id="bellBadge">0</span></button>
     </div>
     <div class="title">Game<span>Doko</span></div>
     <div class="right"><div class="avatar" id="btnProfile"></div></div>
@@ -229,7 +239,7 @@ setTimeout(function(){
 window.__gd_ready = true;
 if ("serviceWorker" in navigator) { window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, addDoc, updateDoc, collection, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* ============ CONFIG ============ */
@@ -252,6 +262,7 @@ const SERVICE_CHARGE = 15;   // Rs 15 added at payment
 const OPEN_HOUR = 9, CLOSE_HOUR = 21;   // store hours (Nepal time): 9 AM - 9 PM
 /* ================================== */
 
+let pendingGuestName = null;
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -358,6 +369,15 @@ $("#googleBtn").onclick = async () => {
   catch(e){ $("#loginErr").textContent = "Login failed: " + (e.code || e.message); }
 };
 
+$("#guestBtn").onclick = async () => {
+  const name = $("#guestName").value.trim();
+  if (!name) { $("#loginErr").textContent = "Please enter your name."; return; }
+  $("#loginErr").textContent = "";
+  pendingGuestName = name;
+  try { await signInAnonymously(auth); }
+  catch(e){ pendingGuestName = null; $("#loginErr").textContent = "Guest login failed: " + (e.code || e.message); }
+};
+
 onAuthStateChanged(auth, async user => {
   if (!user) {
     me = null; profile = null;
@@ -367,7 +387,7 @@ onAuthStateChanged(auth, async user => {
     $("#loginScreen").classList.remove("hidden"); hideSplash(); return;
   }
   me = user;
-  const fallbackName = (user.displayName || (user.email||"User").split("@")[0]).trim();
+  const fallbackName = (pendingGuestName || user.displayName || (user.email||"User").split("@")[0]).trim();
   profile = { name: fallbackName, email: user.email, photo: user.photoURL || "" };
   try {
     const ref = doc(db,"users",user.uid);
@@ -375,6 +395,10 @@ onAuthStateChanged(auth, async user => {
     if (snap.exists() && snap.data().name) profile = snap.data();
     else await setDoc(ref, { ...profile, createdAt: serverTimestamp() }, { merge:true });
   } catch(e){ console.warn(e); }
+  if (pendingGuestName) {
+    profile.name = pendingGuestName; pendingGuestName = null;
+    try { await setDoc(doc(db,"users",user.uid), { name: profile.name }, { merge:true }); } catch(e){}
+  }
   $("#loginScreen").classList.add("hidden");
   enterApp();
   hideSplash();
@@ -636,7 +660,7 @@ async function submitOrder(){
     });
     tgSend("🛒 New order - GameDoko\n\n" +
       "Game: " + g.name + "\nPackage: " + it.name + "\nAmount: Rs " + total + "\n" +
-      "ID/UID: " + gameId + "\nName: " + profile.name + "\nEmail: " + me.email + "\n" +
+      "ID/UID: " + gameId + "\nName: " + profile.name + "\nEmail: " + (me.email || "guest") + "\n" +
       "Screenshot: " + (url || "not uploaded") + "\n" +
       (detailsOk ? "Sender phone: " + sphone + "\nSender amount: NPR " + samt + "\nTransaction code: " + stxn + "\n" : "") +
       "\nCheck eSewa, then Approve/Reject in Admin panel.");
@@ -755,7 +779,7 @@ function renderChat(){
     try {
       const mref = await addDoc(collection(db,"chats",me.uid,"messages"), { from:"user", text:t, createdAt: serverTimestamp() });
       await setDoc(doc(db,"chats",me.uid), { uid:me.uid, userName:profile.name, email:me.email, lastMessage:t, lastFrom:"user", lastAt: serverTimestamp(), unreadAdmin:true, unreadUser:false }, { merge:true });
-      tgSend("💬 New message - GameDoko\n\nFrom: " + profile.name + "\nEmail: " + me.email + "\n\n" + t + "\n\nReply in app: Settings > Admin panel > Chats.");
+      tgSend("💬 New message - GameDoko\n\nFrom: " + profile.name + "\nEmail: " + (me.email || "guest") + "\n\n" + t + "\n\nReply in app: Settings > Admin panel > Chats.");
     } catch(err){ toast("Message not sent: " + err.message); }
   };
 }
