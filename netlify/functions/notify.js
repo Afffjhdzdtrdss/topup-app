@@ -48,7 +48,8 @@ exports.handler = async (event) => {
       "ID/UID: " + field(d, "gameId") + "\n" +
       "Name: " + field(d, "userName") + "\n" +
       "Email: " + field(d, "email") + "\n" +
-      "Proof: " + field(d, "screenshot") + "\n\n" +
+      "Screenshot: " + (field(d, "screenshot") || "not uploaded") + "\n" +
+      (field(d, "senderPhone") ? "Sender phone: " + field(d, "senderPhone") + "\nSender amount: NPR " + field(d, "senderAmount") + "\nTransaction code: " + field(d, "txnCode") + "\n" : "") + "\n" +
       "Check your eSewa, then Approve/Reject in the app's Admin panel.";
   }
 
