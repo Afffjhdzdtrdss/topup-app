@@ -83,6 +83,7 @@ input,textarea{font:inherit}
 .games{display:grid;gap:10px}
 .game{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:16px;padding:0;color:#fff;text-align:left;width:100%;overflow:hidden;min-height:84px;position:relative}
 .game .em{font-size:44px;padding:0 6px 0 16px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
+.soldtag{position:absolute;top:10px;right:44px;background:#dc2626;color:#fff;font-weight:900;font-size:12px;letter-spacing:1px;padding:4px 10px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.4)}
 .game .go{margin-left:auto;margin-right:16px;font-size:26px;opacity:.9}
 .game small{display:block;opacity:.85;font-size:12px;margin-top:2px;font-family:system-ui,sans-serif;letter-spacing:0}
 .off{background:#16a34a;color:#fff;font-size:11px;font-weight:800;padding:2px 7px;border-radius:8px;margin-left:4px;white-space:nowrap;font-family:system-ui,sans-serif;letter-spacing:0}
@@ -293,7 +294,7 @@ const GAMES = [
     cats:[
     { name:"UC Packs", items:[["120 UC",360,"💵"],["240 UC",660,"💵"],["325 UC",860,"💵"],["660 UC",1760,"💵"],["720 UC",1910,"💵"],["1500 UC",4010,"💵"],["1800 UC",4510,"💵"],["3850 UC",8610,"💵"],["8100 UC",18010,"💵"]] }
   ]},
-  { id:"rb", off:9, name:"ROBLOX", full:"Roblox (Robux)", wm:"wm-rb", img:GAME_IMG.rb, bg:"linear-gradient(135deg,#7f1d1d,#b91c1c 60%,#ef4444)", icon:"🧱",
+  { id:"rb", soldOut:true, off:9, name:"ROBLOX", full:"Roblox (Robux)", wm:"wm-rb", img:GAME_IMG.rb, bg:"linear-gradient(135deg,#7f1d1d,#b91c1c 60%,#ef4444)", icon:"🧱",
     idLabel:"Roblox Username", num:false, rule:{re:/^[A-Za-z0-9_]{3,20}$/, msg:"Invalid Roblox username. Use 3 to 20 letters, numbers or underscore.", hint:"3 to 20 characters: letters, numbers, underscore"},
     cats:[
     { name:"Robux", items:[["1000 Robux",1860,"🪙"],["2000 Robux",3710,"🪙"],["3000 Robux",5560,"🪙"],["5000 Robux",9260,"🪙"]] }
@@ -539,7 +540,7 @@ function renderHome(){
       ${GAMES.map(g=>`<button class="game" data-g="${g.id}" style="background:${g.bg}">
         ${gicon(g)}
         <span><span class="wm ${g.wm}">${esc(g.name)}</span><small>${maxOff(g)>0?`<span class="off" style="margin:0 6px 0 0">Up to ${maxOff(g)}% OFF</span>`:""}Tap to top up</small></span>
-        <span class="go">›</span></button>`).join("")}
+        <span class="go">›</span>${g.soldOut?`<span class="soldtag">SOLD OUT</span>`:""}</button>`).join("")}
     </div>
     <div class="card why" style="margin-top:16px">
       <h3>Why Choose GameDoko Store?</h3>
@@ -547,7 +548,11 @@ function renderHome(){
       ${priceListHTML()}
     </div>
     <div class="foot">Made by Krish Rimal</div>`;
-  app$.querySelectorAll(".game").forEach(b => b.onclick = () => go("game",{game:b.dataset.g}));
+  app$.querySelectorAll(".game").forEach(b => b.onclick = () => {
+    const g = GAMES.find(x=>x.id===b.dataset.g);
+    if (g && g.soldOut) return modal("🚫", g.name + " is SOLD OUT", "These items are sold out right now. Please check back later.", "OK");
+    go("game",{game:b.dataset.g});
+  });
 }
 
 function renderGame(){
