@@ -270,8 +270,7 @@ const GAMES = [
     { name:"Diamond Packages", items:[["25 💎",45,"💎"],["115 💎",115,"💎"],["240 💎",220,"💎"],["355 💎",325,"💎"],["480 💎",430,"💎"],["610 💎",535,"💎"],["725 💎",635,"💎"],["850 💎",735,"💎"],["965 💎",850,"💎"],["1090 💎",960,"💎"],["1240 💎",1060,"💎"],["1480 💎",1270,"💎"],["1595 💎",1400,"💎"],["1720 💎",1500,"💎"],["1955 💎",1730,"💎"],["2090 💎",1835,"💎"],["2530 💎",2085,"💎"],["5060 💎",4160,"💎"],["10120 💎",8310,"💎"]] }
   ]},
   { id:"ml", off:9, name:"Mobile Legends", full:"Mobile Legends (MLBB)", wm:"wm-ml", img:GAME_IMG.ml, bg:"linear-gradient(135deg,#0b1b4d,#1e3a8a 60%,#3b82f6)", icon:"⚔️",
-    idLabel:"User ID", num:true, zone:true, rule:{re:/^\d{7,10}$/, msg:"Invalid Mobile Legends User ID. It must be 7 to 10 digits (numbers only).", hint:"Numbers only, 7 to 10 digits"},
-    zoneRule:{re:/^\d{4,5}$/, msg:"Invalid Zone ID. It must be 4 or 5 digits.", hint:"4 or 5 digits"},
+    idLabel:"User ID (Zone ID)", num:false, rule:{re:/^\d{7,10}\s*\(\s*\d{4,5}\s*\)$/, msg:"Invalid Mobile Legends ID. Write it like 12345678 (1234): User ID, then Zone ID in brackets.", hint:"Example: 12345678 (1234)"},
     cats:[
     { name:"Diamonds", items:[["55 💎",180,"💎"],["86 💎",220,"💎"],["172 💎",420,"💎"],["257 💎",610,"💎"],["344 💎",820,"💎"],["429 💎",1000,"💎"],["514 💎",1185,"💎"],["706 💎",1610,"💎"],["1050 💎",2510,"💎"],["1412 💎",3200,"💎"],["2195 💎",4815,"💎"],["3688 💎",8000,"💎"],["5532 💎",12060,"💎"],["9288 💎",21010,"💎"]] },
     { name:"Passes & Bundles", items:[["Weekly Pass",290,"🎫"],["Monthly Epic Bundle",680,"🎁"],["Twilight Pass",1460,"🌙"]] }
@@ -562,7 +561,6 @@ function renderOrder(){
       <div class="hint">${esc(g.rule.hint)}</div>
       <label>Confirm ${esc(g.idLabel)}</label>
       <input class="inp" id="gid2" ${inm} autocomplete="off" placeholder="Enter it again">
-      ${g.zone?`<label>Zone ID</label><input class="inp" id="gzone" inputmode="numeric" autocomplete="off" placeholder="Enter Zone ID"><div class="hint">${esc(g.zoneRule.hint)}</div>`:""}
     </div>
     <div class="card qrbox">
       <b>💳 Pay with eSewa</b>
@@ -589,7 +587,7 @@ function renderOrder(){
   const onlyDigits = id => { const el = document.getElementById(id); if (el) el.oninput = () => { el.value = el.value.replace(/\D/g,""); }; };
   onlyDigits("sphone");
   const am = document.getElementById("samt"); if (am) am.oninput = () => { am.value = am.value.replace(/[^0-9.]/g,"").replace(/(\..*)\./g,"$1"); };
-  if (g.num) ["gid","gid2","gzone"].forEach(id => { const el = document.getElementById(id); if (el) el.oninput = () => { el.value = el.value.replace(/\D/g,""); }; });
+  if (g.num) ["gid","gid2"].forEach(id => { const el = document.getElementById(id); if (el) el.oninput = () => { el.value = el.value.replace(/\D/g,""); }; });
   $("#bk").onclick = () => go("game",{game:g.id});
   $("#shot").onchange = e => {
     shotFile = e.target.files[0] || null;
@@ -615,12 +613,7 @@ async function submitOrder(){
   err.textContent = "";
   if (!g.rule.re.test(id1)) return err.textContent = g.rule.msg;
   if (id1 !== id2) return err.textContent = "The two IDs do not match. Please check again.";
-  let gameId = id1;
-  if (g.zone) {
-    const z = $("#gzone").value.trim();
-    if (!g.zoneRule.re.test(z)) return err.textContent = g.zoneRule.msg;
-    gameId = id1 + " (" + z + ")";
-  }
+  const gameId = id1;
   const sphone = $("#sphone").value.trim(), samt = $("#samt").value.trim(), stxn = $("#stxn").value.trim();
   const phoneOk = /^\d{9,10}$/.test(sphone), amtOk = Number(samt) > 0, txnOk = stxn.length >= 3;
   const detailsOk = phoneOk && amtOk && txnOk;
