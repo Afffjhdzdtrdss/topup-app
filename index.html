@@ -112,6 +112,8 @@ details.pl .in{padding:0 14px 12px}
 label{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
 .inp{width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--text);font-size:16px}
 .inp:focus{outline:0;border-color:var(--blue2)}
+.ptitle{font-size:17px;font-weight:800;line-height:1.45;margin:14px 0 10px;padding:12px;border-radius:12px;background:var(--bg);border:1px dashed var(--line);text-align:center}
+.ptitle span{display:block;font-size:16px;margin-top:4px;color:var(--accent)}
 .hint{font-size:12px;color:var(--muted);margin-top:4px}
 .btn{width:100%;background:var(--blue2);color:#fff;font-weight:800;padding:15px;border-radius:14px;font-size:16px;margin-top:16px}
 .btn:disabled{opacity:.6}
@@ -572,9 +574,21 @@ function renderOrder(){
       <b>📸 Payment proof (screenshot, photo or PDF)</b>
       <input type="file" accept="image/*,application/pdf,.pdf,.heic,.heif,.webp" id="shot" class="inp" style="margin-top:8px">
       <img id="prev" class="shot hidden">
+      <div class="ptitle">If you do not have a statement photo, you can fill in the details below.
+        <span>यदि तपाईंसँग स्टेटमेन्टको फोटो छैन भने, तल दिइएको विवरण भर्न सक्नुहुन्छ।</span></div>
+      <label style="margin-top:0">1. Sender's phone number</label>
+      <input class="inp" id="sphone" inputmode="numeric" maxlength="10" autocomplete="off" placeholder="Phone number you paid from">
+      <label>2. Amount (NPR)</label>
+      <input class="inp" id="samt" inputmode="decimal" autocomplete="off" placeholder="Amount you paid">
+      <label>3. Transaction code</label>
+      <input class="inp" id="stxn" autocomplete="off" placeholder="Transaction / reference code">
+      <div class="hint">Upload a screenshot OR fill in these 3 details. One of them is required.</div>
     </div>
     <div class="err" id="err"></div>
     <button class="btn" id="save">💾 Save and place order</button>`;
+  const onlyDigits = id => { const el = document.getElementById(id); if (el) el.oninput = () => { el.value = el.value.replace(/\D/g,""); }; };
+  onlyDigits("sphone");
+  const am = document.getElementById("samt"); if (am) am.oninput = () => { am.value = am.value.replace(/[^0-9.]/g,"").replace(/(\..*)\./g,"$1"); };
   if (g.num) ["gid","gid2","gzone"].forEach(id => { const el = document.getElementById(id); if (el) el.oninput = () => { el.value = el.value.replace(/\D/g,""); }; });
   $("#bk").onclick = () => go("game",{game:g.id});
   $("#shot").onchange = e => {
@@ -607,15 +621,23 @@ async function submitOrder(){
     if (!g.zoneRule.re.test(z)) return err.textContent = g.zoneRule.msg;
     gameId = id1 + " (" + z + ")";
   }
-  if (!shotFile) return err.textContent = "Please upload your payment proof (screenshot, photo or PDF).";
-  if (shotFile.size > 10*1024*1024) return err.textContent = "File is too large. Maximum size is 10 MB.";
+  const sphone = $("#sphone").value.trim(), samt = $("#samt").value.trim(), stxn = $("#stxn").value.trim();
+  const phoneOk = /^\d{9,10}$/.test(sphone), amtOk = Number(samt) > 0, txnOk = stxn.length >= 3;
+  const detailsOk = phoneOk && amtOk && txnOk;
+  if (!shotFile && !detailsOk) {
+    if (!sphone && !samt && !stxn) return err.textContent = "Please upload your payment screenshot OR fill in the sender phone number, amount and transaction code.";
+    if (!phoneOk) return err.textContent = "Wrong number. Sender's phone number must have at least 9 digits.";
+    if (!amtOk) return err.textContent = "Please enter the amount (NPR) you paid.";
+    return err.textContent = "Please enter the transaction code.";
+  }
+  if (shotFile && shotFile.size > 10*1024*1024) return err.textContent = "File is too large. Maximum size is 10 MB.";
   const btn = $("#save"); btn.disabled = true; btn.textContent = "Sending...";
   try {
-    const url = await uploadShot(shotFile);
+    const url = shotFile ? await uploadShot(shotFile) : "";
     const ref = await addDoc(collection(db,"orders"), {
       uid: me.uid, userName: profile.name, email: me.email,
       game: g.name, item: it.name, price: total, itemPrice: it.price, serviceCharge: SERVICE_CHARGE, gameId,
-      screenshot: url, status: "pending", createdAt: serverTimestamp()
+      screenshot: url, senderPhone: detailsOk ? sphone : "", senderAmount: detailsOk ? samt : "", txnCode: detailsOk ? stxn : "", status: "pending", createdAt: serverTimestamp()
     });
     notifyOwner(ref.id);
     modal("✅","Payment successful","Your payment is successful. Please wait a few minutes while we check the payment. You can track the status in 🔔.","Go to Home",()=>go("home"));
@@ -745,6 +767,11 @@ function renderChat(){
 
 /* ---------- Admin ---------- */
 let adminFilter = "pending", adminView = "orders";
+function proofThumb(o){
+  if (!o.screenshot) return `<div class="thumb" style="display:flex;align-items:center;justify-content:center;font-size:30px;background:var(--bg)">🧾</div>`;
+  const inner = /\.pdf($|\?)/i.test(o.screenshot) ? `<div class="thumb" style="display:flex;align-items:center;justify-content:center;font-size:30px;background:var(--bg)">📄</div>` : `<img class="thumb" src="${esc(o.screenshot)}">`;
+  return `<a href="${esc(o.screenshot)}" target="_blank">${inner}</a>`;
+}
 function renderAdmin(){
   if (!isAdmin()) return go("home");
   const unreadChats = adminChats.filter(c=>c.unreadAdmin).length;
@@ -772,11 +799,12 @@ function renderAdmin(){
       (list.length ? list.map(o=>`
         <div class="card">
           <div style="display:flex;gap:12px">
-            <a href="${esc(o.screenshot)}" target="_blank">${/\.pdf($|\?)/i.test(o.screenshot||"")?`<div class="thumb" style="display:flex;align-items:center;justify-content:center;font-size:30px;background:var(--bg)">📄</div>`:`<img class="thumb" src="${esc(o.screenshot)}">`}</a>
+            ${proofThumb(o)}
             <div style="flex:1;min-width:0">
               <b>${esc(o.game)} — ${esc(o.item)}</b>
               <div style="font-size:18px;font-weight:800;color:var(--blue2)">${rs(o.price)}</div>
               <div>ID: <b style="user-select:all">${esc(o.gameId)}</b></div>
+              ${o.senderPhone?`<div class="muted">Sender: <b style="user-select:all">${esc(o.senderPhone)}</b> • NPR ${esc(o.senderAmount)} • Txn: <b style="user-select:all">${esc(o.txnCode)}</b></div>`:""}
               <div class="muted">${esc(o.userName)} • ${esc(o.email)}</div>
               <div class="muted">${fmtDate(o)}</div>
               <span class="chip ${o.status}">${o.status}</span>
