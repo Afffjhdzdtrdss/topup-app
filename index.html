@@ -12,8 +12,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Black+Ops+One&family=Cinzel:wght@700;900&family=Lilita+One&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f4f6fb;--card:#ffffff;--text:#121826;--muted:#667085;--line:#e4e7ee;--blue:#1d4ed8;--blue2:#2563eb;--gold:#f59e0b;--ok:#16a34a;--bad:#dc2626;--warn:#d97706;--grey:#e5e8ee;--accent:#ff5a1f}
-[data-theme="dark"]{--bg:#0d1117;--card:#161b24;--text:#eef1f6;--muted:#98a2b3;--line:#262d3a;--grey:#232830}
+:root{--sbg:#ffffff;--stext:#121826;--gbg:#ffffff;--gborder:#d0d5dd;--ginp:#f4f6fb;--gtext:#121826;--gmuted:#667085;--topbar:#ffffff;--ic-a:#5b6475;--ic-b:#252c3a;--bg:#ffffff;--card:#ffffff;--text:#121826;--muted:#667085;--line:#e4e7ee;--blue:#1d4ed8;--blue2:#2563eb;--gold:#f59e0b;--ok:#16a34a;--bad:#dc2626;--warn:#d97706;--grey:#e5e8ee;--accent:#ff5a1f}
+[data-theme="dark"]{--sbg:#1c1f26;--stext:#ffffff;--gbg:#2a2f38;--gborder:#3a4150;--ginp:#2a2f38;--gtext:#ffffff;--gmuted:#7d8696;--topbar:#000000;--ic-a:#eef1f6;--ic-b:#7d8799;--bg:#0d1117;--card:#161b24;--text:#eef1f6;--muted:#98a2b3;--line:#262d3a;--grey:#232830}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
@@ -22,33 +22,34 @@ input,textarea{font:inherit}
 .hidden{display:none!important}
 
 /* Splash */
-#splash{position:fixed;inset:0;background:#1c1f26;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;transition:opacity .5s}
+#splash{position:fixed;inset:0;background:var(--sbg);color:var(--stext);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;transition:opacity .5s}
 #splash .sticker{font-size:110px;animation:wave 1.6s ease-in-out infinite;transform-origin:70% 80%}
 #splash h1{font-size:44px;margin:10px 0 4px;letter-spacing:1px}
 #splash p{margin:0;opacity:.85}
 @keyframes wave{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
 
 /* Login */
-.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;background:#1c1f26;color:#fff;z-index:90;text-align:center}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;background:var(--sbg);color:var(--stext);z-index:90;text-align:center}
 .screen .sticker{font-size:80px}
 .screen h2{margin:8px 0 6px;font-size:30px}
 .screen p{margin:0 0 26px;opacity:.9}
-.gbtn{background:#2a2f38;color:#fff;border:1px solid #3a4150;border-radius:14px;padding:14px 22px;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;gap:12px;width:100%;max-width:340px;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+.gbtn{background:var(--gbg);color:var(--gtext);border:1px solid var(--gborder);border-radius:14px;padding:14px 22px;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;gap:12px;width:100%;max-width:340px;box-shadow:0 6px 20px rgba(0,0,0,.35)}
 .gbtn svg{width:22px;height:22px;flex-shrink:0}
-.gbtn:active{background:#343a46}
-.ginp{width:100%;max-width:340px;padding:14px;border-radius:12px;border:1px solid #3a4150;background:#2a2f38;color:#fff;font-size:16px;text-align:center;margin-bottom:12px;outline:0}
-.ginp::placeholder{color:#7d8696}
-.gsep{color:#7d8696;font-size:13px;margin:18px 0;letter-spacing:2px}
+.gbtn:active{background:var(--ginp)}
+.ginp{width:100%;max-width:340px;padding:14px;border-radius:12px;border:1px solid var(--gborder);background:var(--ginp);color:var(--gtext);font-size:16px;text-align:center;margin-bottom:12px;outline:0}
+.ginp::placeholder{color:var(--gmuted)}
+.lerr{color:var(--bad);margin-top:14px;font-size:14px}
+.gsep{color:var(--gmuted);font-size:13px;margin:18px 0;letter-spacing:2px}
 .whitebtn{background:#fff;color:#111;border-radius:14px;padding:14px 22px;font-weight:700;font-size:16px;display:flex;align-items:center;gap:10px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 
 /* Top bar */
-#topbar{position:fixed;top:0;left:0;right:0;height:58px;background:#000;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:50;padding-top:env(safe-area-inset-top)}
+#topbar{position:fixed;top:0;left:0;right:0;height:58px;background:var(--topbar);color:var(--text);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:50;padding-top:env(safe-area-inset-top)}
 #topbar .left,#topbar .right{display:flex;align-items:center;gap:6px;min-width:96px}
 #topbar .right{justify-content:flex-end}
 #topbar .title{font-weight:800;font-size:20px;letter-spacing:.5px}
 #topbar .title span{color:var(--gold)}
-.ibtn{background:transparent;color:#fff;font-size:22px;width:42px;height:42px;border-radius:50%;position:relative}
-.ibtn:active{background:#222}
+.ibtn{background:transparent;color:var(--text);font-size:22px;width:42px;height:42px;border-radius:50%;position:relative}
+.ibtn:active{background:rgba(127,127,127,.25)}
 .ibtn svg{width:28px;height:28px;display:block;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
 .badge{position:absolute;top:0;right:0;background:linear-gradient(#ff6b6b,#d91e1e);box-shadow:0 2px 5px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.45);border:2px solid #14171c;font-weight:800;color:#fff;font-size:11px;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
 .avatar{width:38px;height:38px;border-radius:50%;background:var(--gold);color:#000;font-weight:800;display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -63,8 +64,10 @@ input,textarea{font:inherit}
 
 /* Bottom nav (like the reference) */
 #nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;z-index:50;padding:6px 6px calc(6px + env(safe-area-inset-bottom));gap:4px}
-#nav button{flex:1;background:transparent;color:#9aa3b2;padding:9px 0 8px;display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:16px;font-family:'Rajdhani',system-ui,sans-serif;font-weight:700;font-size:13px;letter-spacing:.8px;text-transform:uppercase}
+#nav button{position:relative;flex:1;background:transparent;color:#9aa3b2;padding:9px 0 8px;display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:16px;font-family:'Rajdhani',system-ui,sans-serif;font-weight:700;font-size:13px;letter-spacing:.8px;text-transform:uppercase}
 #nav button svg{width:26px;height:26px}
+#nav button.txt{justify-content:center;min-height:52px;font-size:13px}
+#nav .badge{top:2px;right:12px;font-size:11px;min-width:17px;height:17px}
 #nav button.active{color:var(--accent);background:rgba(255,90,31,.14)}
 #fab{position:fixed;right:14px;bottom:calc(86px + env(safe-area-inset-bottom));z-index:55;background:var(--accent);color:#fff;font-weight:800;border-radius:28px;padding:12px 18px;box-shadow:0 8px 24px rgba(0,0,0,.4);display:flex;align-items:center;gap:8px;font-size:15px}
 #fab .badge{top:-6px;right:-4px}
@@ -198,17 +201,17 @@ label{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
   <div class="gsep">OR</div>
   <input class="ginp" id="guestName" autocomplete="off" placeholder="Enter your name">
   <button class="gbtn" id="guestBtn">👤 Continue as Guest</button>
-  <div id="loginErr" style="margin-top:14px;color:#fecaca;font-size:14px"></div>
+  <div id="loginErr" class="lerr"></div>
 </div>
 
 <div id="main" class="hidden">
   <div id="topbar">
     <div class="left">
-      <button class="ibtn" id="btnSettings" aria-label="Settings"><svg viewBox="0 0 24 24"><defs><linearGradient id="gGear" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef1f6"/><stop offset="1" stop-color="#7d8799"/></linearGradient></defs><path fill="url(#gGear)" d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84a.48.48 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87a.49.49 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 0 0-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg><span class="badge hidden" id="gearBadge">0</span></button>
-      <button class="ibtn" id="btnBell" aria-label="Notifications"><svg viewBox="0 0 24 24"><defs><linearGradient id="gBell" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#c3cad6"/><stop offset="1" stop-color="#7d8799"/></linearGradient></defs><path fill="url(#gBell)" d="M12 2.2a6.3 6.3 0 0 0-6.3 6.3v4.1L3.9 16.6a1 1 0 0 0 .9 1.5h14.4a1 1 0 0 0 .9-1.5l-1.8-4V8.5A6.3 6.3 0 0 0 12 2.2z"/><path fill="#5d6678" d="M9.4 19.3a2.6 2.6 0 0 0 5.2 0z"/><ellipse cx="9.2" cy="6.6" rx="1.7" ry="1.1" fill="#fff" opacity=".7"/></svg><span class="badge hidden" id="bellBadge">0</span></button>
+      <button class="ibtn" id="btnSettings" aria-label="Settings"><svg viewBox="0 0 24 24"><defs><linearGradient id="gGear" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--ic-a)"/><stop offset="1" style="stop-color:var(--ic-b)"/></linearGradient></defs><path fill="url(#gGear)" d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84a.48.48 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87a.49.49 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 0 0-.12-.61l-2.01-1.58zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button>
+      <button class="ibtn hidden" id="btnAdminOrders" aria-label="Orders"><svg viewBox="0 0 24 24" width="26" height="26"><path fill="currentColor" d="M6 2h12a1 1 0 0 1 1 1v18l-3-2-3 2-3-2-3 2V3a1 1 0 0 1 1-1zm2 5v2h8V7H8zm0 4v2h8v-2H8zm0 4v2h5v-2H8z"/></svg><span class="badge hidden" id="ordBadge">0</span></button>
     </div>
     <div class="title">Game<span>Doko</span></div>
-    <div class="right"><button class="ibtn hidden" id="btnChat" aria-label="Chats"><svg viewBox="0 0 24 24"><defs><linearGradient id="gChat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#8b94a5"/></linearGradient></defs><path fill="url(#gChat)" d="M12 2.5C6.2 2.5 1.5 6.3 1.5 11c0 2.5 1.3 4.7 3.4 6.3L4 21.5l4.6-2.4c1 .3 2.1.4 3.4.4 5.8 0 10.5-3.8 10.5-8.5S17.8 2.5 12 2.5z"/></svg><span class="badge hidden" id="chatBadge">0</span></button><div class="avatar" id="btnProfile"></div></div>
+    <div class="right"><button class="ibtn hidden" id="btnChat" aria-label="Chats"><svg viewBox="0 0 24 24"><defs><linearGradient id="gChat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--ic-a)"/><stop offset="1" style="stop-color:var(--ic-b)"/></linearGradient></defs><path fill="url(#gChat)" d="M12 2.5C6.2 2.5 1.5 6.3 1.5 11c0 2.5 1.3 4.7 3.4 6.3L4 21.5l4.6-2.4c1 .3 2.1.4 3.4.4 5.8 0 10.5-3.8 10.5-8.5S17.8 2.5 12 2.5z"/></svg><span class="badge hidden" id="chatBadge">0</span></button><div class="avatar" id="btnProfile"></div></div>
   </div>
 
   <div id="app"></div>
@@ -218,7 +221,7 @@ label{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
   <div id="nav">
     <button data-go="home" class="active"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2 12h3v8h5v-5h4v5h5v-8h3L12 3z"/></svg>Home</button>
     <button data-go="support"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a9 9 0 0 0-9 9v6a3 3 0 0 0 3 3h2v-8H5v-1a7 7 0 0 1 14 0v1h-3v8h3a3 3 0 0 0 3-3v-6a9 9 0 0 0-9-9z"/></svg>Support</button>
-    <button data-go="admin" id="navOrders" class="hidden"><svg viewBox="0 0 24 24" width="26" height="26"><path fill="currentColor" d="M6 2h12a1 1 0 0 1 1 1v18l-3-2-3 2-3-2-3 2V3a1 1 0 0 1 1-1zm2 5v2h8V7H8zm0 4v2h8v-2H8zm0 4v2h5v-2H8z"/></svg>Orders</button>
+    <button data-go="notifications" class="txt" id="navHistory">History<span class="badge hidden" id="histBadge">0</span></button>
     <button data-go="about"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>About</button>
   </div>
 </div>
@@ -410,7 +413,7 @@ function enterApp(){
   $("#main").classList.remove("hidden");
   renderAvatar();
   $("#btnChat").classList.toggle("hidden", !isAdmin());
-  $("#navOrders").classList.toggle("hidden", !isAdmin());
+  $("#btnAdminOrders").classList.toggle("hidden", !isAdmin());
   watchAll();
   go("home");
 }
@@ -450,6 +453,7 @@ function watchAll(){
   if (isAdmin()) {
     unsubAdmin = onSnapshot(collection(db,"orders"), snap => {
       adminOrders = snap.docs.map(d => ({ id:d.id, ...d.data() })).sort((a,b)=>ts(b)-ts(a));
+      { const p = adminOrders.filter(o=>o.status==="pending").length; const ob=$("#ordBadge"); ob.textContent=p; ob.classList.toggle("hidden", p===0); }
       if (current.page === "admin") render();
     });
     unsubAdminChats = onSnapshot(collection(db,"chats"), snap => {
@@ -465,7 +469,7 @@ function seenAt(){ try{ return Number(localStorage.getItem("gd_seen_"+me.uid)||0
 function updateBadge(){
   const seen = seenAt();
   const n = myOrders.filter(o => (o.status === "approved" || o.status === "rejected") && (o.updatedAtMs||0) > seen).length;
-  const b = $("#bellBadge"); b.textContent = n; b.classList.toggle("hidden", n === 0);
+  const b = $("#histBadge"); b.textContent = n; b.classList.toggle("hidden", n === 0);
 }
 function updateFab(){
   const fab = $("#fab"), b = $("#fabBadge");
@@ -491,7 +495,6 @@ function go(page, extra={}, push=true){
   render(); updateFab(); window.scrollTo(0,0);
 }
 document.querySelectorAll("#nav button").forEach(b => b.onclick = () => go(b.dataset.go));
-$("#navOrders").onclick = () => { adminView = "orders"; go("admin"); };
 $("#fab").onclick = () => go("chat");
 $("#btnChat").onclick = () => { adminView = "chats"; go("admin"); };
 /* Phone/browser Back button: go to the previous page inside the app instead of closing it */
@@ -502,7 +505,7 @@ window.addEventListener("popstate", e => {
   else go("home", {}, false);
 });
 $("#btnSettings").onclick = () => go("settings");
-$("#btnBell").onclick = () => { try{ localStorage.setItem("gd_seen_"+me.uid, String(Date.now())) }catch(e){} updateBadge(); go("notifications"); };
+$("#btnAdminOrders").onclick = () => { adminView = "orders"; go("admin"); };
 $("#btnProfile").onclick = () => {
   const s = $("#profileSheet");
   if (!s.classList.contains("hidden")) { s.classList.add("hidden"); return; }
@@ -699,7 +702,9 @@ async function tgSend(text){
 }
 
 function renderNotifs(){
-  app$.innerHTML = `<div class="page-title"><button class="back" id="bk">←</button>🔔 Payment records</div>` +
+  try{ localStorage.setItem("gd_seen_"+me.uid, String(Date.now())) }catch(e){}
+  updateBadge();
+  app$.innerHTML = `<div class="page-title"><button class="back" id="bk">←</button>Payment history</div>` +
     (myOrders.length ? myOrders.map(o=>{
       const st = o.status;
       const label = st==="approved"?"Success":st==="rejected"?"Rejected":"Checking";
@@ -741,7 +746,7 @@ function renderAbout(){
       <div style="font-size:60px">🎮</div>
       <h2 style="margin:4px 0">GameDoko</h2>
       <p class="muted">Top up Free Fire, Mobile Legends, PUBG and Roblox in one place. Pay with eSewa and track your order status inside the app.</p>
-      <p class="muted">Beta version 1.3 (payment details update)</p>
+      <p class="muted">Beta version 1.4 (history, light mode)</p>
       <b>Made by Krish Rimal</b>
     </div>`;
 }
